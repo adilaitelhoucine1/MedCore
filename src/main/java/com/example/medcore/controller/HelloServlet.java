@@ -1,4 +1,4 @@
-package com.example.medcore;
+package com.example.medcore.controller;
 
 import java.io.*;
 
