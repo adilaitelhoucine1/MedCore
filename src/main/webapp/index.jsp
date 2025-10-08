@@ -59,5 +59,9 @@
     </div>
 </c:if>
 
+
+<%-- Display the user object directly --%>
+
+
 </body>
 </html>
