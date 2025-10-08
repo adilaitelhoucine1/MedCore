@@ -6,14 +6,27 @@
     <persistence-unit name="default" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <!-- List your entity classes here -->
+        <class>com.example.medcore.model.Utilisateur</class>
+        <class>com.example.medcore.model.Infirmier</class>
+        <class>com.example.medcore.model.MedecinGeneraliste</class>
+        <class>com.example.medcore.model.MedecinSpecialiste</class>
+        <class>com.example.medcore.model.Consultation</class>
+        <class>com.example.medcore.model.Creneau</class>
+        <class>com.example.medcore.model.SignesVitaux</class>
+        <class>com.example.medcore.model.Patient</class>
+        <class>com.example.medcore.model.ActeTechnique</class>
+        <class>com.example.medcore.model.DemandeExpertise</class>
+        <class>com.example.medcore.model.DossierMedical</class>
+        <!-- Add more <class> entries if you add more entities -->
+
         <properties>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/medcore?useSSL=false&amp;serverTimezone=UTC"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/medcore_db?useSSL=false&amp;serverTimezone=UTC"/>
             <property name="jakarta.persistence.jdbc.user" value="root"/>
             <property name="jakarta.persistence.jdbc.password" value="adiladil123"/>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
-            <!-- Use validate/update/create/create-drop only -->
-            <property name="hibernate.hbm2ddl.auto" value="validate"/>
+            <!-- Use 'create' to auto-create tables, 'update' to auto-update, 'validate' to check schema only -->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
         </properties>
