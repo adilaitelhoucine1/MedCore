@@ -52,5 +52,12 @@
     <a href="login" class="btn">Connexion</a>
     <a href="register" class="btn">Inscription</a>
 </div>
+<%-- Check if error attribute exists --%>
+<c:if test="${not empty error}">
+    <div style="color:red;">
+            ${error}
+    </div>
+</c:if>
+
 </body>
 </html>

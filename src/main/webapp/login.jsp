@@ -65,7 +65,7 @@
 <div class="container">
     <h2>Connexion</h2>
     <form action="login" method="post">
-        <input type="text" name="username" placeholder="Nom d'utilisateur" required>
+        <input type="text" name="email" placeholder="Nom d'utilisateur" required>
         <input type="password" name="password" placeholder="Mot de passe" required>
         <button type="submit" class="btn">Se connecter</button>
     </form>

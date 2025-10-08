@@ -2,6 +2,7 @@ package com.example.medcore.service;
 
 import com.example.medcore.dao.UserDAO;
 import com.example.medcore.model.Utilisateur;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UserSercive {
 
@@ -18,8 +19,16 @@ public class UserSercive {
 
         }
 
-        public  boolean login(String email,String password){
-        return  true;
+        public  Utilisateur login(String email,String password){
+
+            Utilisateur user = userDAO.findByEmail(email);
+            if (user != null) {
+                if (BCrypt.checkpw(password, user.getMotDePasse())) {
+                    return user;
+                }
+            }
+            return user;
+
         }
 
 
