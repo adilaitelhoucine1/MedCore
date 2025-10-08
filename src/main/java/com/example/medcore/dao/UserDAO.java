@@ -8,14 +8,22 @@ import jakarta.persistence.Persistence;
 public class UserDAO {
     private EntityManagerFactory em = Persistence.createEntityManagerFactory("default");
 
-    public void save(Utilisateur user) {
+    public boolean save(Utilisateur user) {
         EntityManager entityManager = em.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             entityManager.persist(user);
             entityManager.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            e.printStackTrace();
+            return false;
         } finally {
             entityManager.close();
         }
+
     }
 }

@@ -49,8 +49,8 @@
 <body>
 <div class="container">
     <h1>Bienvenue sur MedCore</h1>
-    <a href="login.jsp" class="btn">Connexion</a>
-    <a href="register.jsp" class="btn">Inscription</a>
+    <a href="login" class="btn">Connexion</a>
+    <a href="register" class="btn">Inscription</a>
 </div>
 </body>
 </html>

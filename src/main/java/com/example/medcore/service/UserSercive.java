@@ -11,11 +11,15 @@ public class UserSercive {
              this.userDAO=new UserDAO();
         }
 
-        public void register(Utilisateur user){
+        public boolean register(Utilisateur user){
             // validate email , password
-            userDAO.save(user);
+            return  userDAO.save(user);
 
 
+        }
+
+        public  boolean login(String email,String password){
+        return  true;
         }
 
 
