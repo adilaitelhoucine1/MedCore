@@ -8,18 +8,21 @@ import jakarta.persistence.Persistence;
 public class DossierDAO {
     private final EntityManagerFactory  em = Persistence.createEntityManagerFactory("default");
 
-    public void addMedicalInfo(DossierMedical dossierMedical){
+    public boolean addMedicalInfo(DossierMedical dossierMedical){
         EntityManager entityManager = em.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             entityManager.persist(dossierMedical);
             entityManager.getTransaction().commit();
+            return  true;
 
         } catch (Exception e) {
             if (entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().rollback();
             }
+
             e.printStackTrace();
+            return  false;
 
         } finally {
             entityManager.close();

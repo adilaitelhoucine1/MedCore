@@ -9,8 +9,9 @@ public class SignesVitaux {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private DossierMedical dossierMedical;
+    @OneToOne
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
 
     private LocalDateTime dateSaisie;
     private String tension;
@@ -20,10 +21,20 @@ public class SignesVitaux {
     private Double poids;
     private Double taille;
 
+    protected   SignesVitaux(){}
+    public SignesVitaux(Patient patient,String tension,Integer frequenceCardiaque,Double temperature,Integer frequenceRespiratoire,Double poids,Double taille){
+        this.patient = patient;
+        this.dateSaisie=LocalDateTime.now();
+        this.tension=tension;
+        this.frequenceCardiaque=frequenceCardiaque;
+        this.temperature=temperature;
+        this.poids=poids;
+        this.taille=taille;
+    }
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    public DossierMedical getDossierMedical() { return dossierMedical; }
-    public void setDossierMedical(DossierMedical dossierMedical) { this.dossierMedical = dossierMedical; }
+    public Patient getpatient() { return patient; }
+    public void setDossierMedical(Patient patient) { this.patient = patient; }
     public LocalDateTime getDateSaisie() { return dateSaisie; }
     public void setDateSaisie(LocalDateTime dateSaisie) { this.dateSaisie = dateSaisie; }
     public String getTension() { return tension; }
