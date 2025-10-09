@@ -14,32 +14,49 @@ import java.util.List;
 @WebServlet(urlPatterns = {"/registerPatient", "/listPatients"})
 public class PatientServlet extends HttpServlet {
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String nom = request.getParameter("nom");
-        String prenom = request.getParameter("prenom");
-        String dateNaissance = request.getParameter("dateNaissance");
-        String numSecu = request.getParameter("numSecu");
-        String adresse = request.getParameter("adresse");
-        String telephone = request.getParameter("telephone");
-        String mutuelle = request.getParameter("mutuelle");
 
-        Patient patient = new Patient();
-        patient.setNom(nom);
-        patient.setPrenom(prenom);
-        patient.setDateNaissance(LocalDate.parse(dateNaissance));
-        patient.setNumSecu(numSecu);
-        patient.setAdresse(adresse);
-        patient.setTelephone(telephone);
-        patient.setMutuelle(mutuelle);
+        String path = request.getServletPath();
 
-        PatientDAO dao = new PatientDAO();
-        dao.save(patient);
+        switch (path) {
+            case "/registerPatient":
+                String nom = request.getParameter("nom");
+                String prenom = request.getParameter("prenom");
+                String dateNaissance = request.getParameter("dateNaissance");
+                String numSecu = request.getParameter("numSecu");
+                String adresse = request.getParameter("adresse");
+                String telephone = request.getParameter("telephone");
+                String mutuelle = request.getParameter("mutuelle");
 
-        response.sendRedirect("SPECIALISTE.jsp?success=1");
+
+                Patient patient = new Patient();
+                patient.setNom(nom);
+                patient.setPrenom(prenom);
+
+
+                if (dateNaissance != null && !dateNaissance.isEmpty()) {
+                    patient.setDateNaissance(LocalDate.parse(dateNaissance));
+                }
+
+                patient.setNumSecu(numSecu);
+                patient.setAdresse(adresse);
+                patient.setTelephone(telephone);
+                patient.setMutuelle(mutuelle);
+
+                PatientDAO dao = new PatientDAO();
+                dao.save(patient);
+
+
+                response.sendRedirect(request.getContextPath() + "/listPatients");
+                break;
+
+            default:
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                break;
+        }
     }
-
-
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -50,12 +67,11 @@ public class PatientServlet extends HttpServlet {
         switch (path) {
             case "/listPatients":
                 PatientDAO dao = new PatientDAO();
-
                 List<Patient> patients = dao.listPatients();
-                System.out.println("Servlet: fetched patients size = " + patients.size()); // debug
-                request.setAttribute("patients", patients);
-                request.getRequestDispatcher("Infirmier/INFIRMIER.jsp").forward(request, response);
 
+                request.setAttribute("patients", patients);
+
+                request.getRequestDispatcher("/Infirmier/INFIRMIER.jsp").forward(request, response);
                 break;
 
             default:
@@ -63,6 +79,4 @@ public class PatientServlet extends HttpServlet {
                 break;
         }
     }
-
-
 }

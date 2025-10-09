@@ -45,23 +45,23 @@
     <div class="modal fade" id="patientModal" tabindex="-1" aria-labelledby="patientModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form>
+                <form action="registerPatient" method="post">
                     <div class="modal-header">
                         <h5 class="modal-title" id="patientModalLabel">Informations administratives</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="text" class="form-control mb-2" placeholder="Nom">
-                        <input type="text" class="form-control mb-2" placeholder="Prénom">
-                        <input type="date" class="form-control mb-2" placeholder="Date de naissance">
-                        <input type="text" class="form-control mb-2" placeholder="Numéro de Sécurité Sociale">
-                        <input type="text" class="form-control mb-2" placeholder="Adresse">
-                        <input type="tel" class="form-control mb-2" placeholder="Téléphone">
-                        <input type="text" class="form-control mb-2" placeholder="Mutuelle">
+                        <input type="text" class="form-control mb-2" id="nom" name="nom" placeholder="Nom">
+                        <input type="text" class="form-control mb-2" id="prenom" name="prenom" placeholder="Prénom">
+                        <input type="date" class="form-control mb-2" id="dateNaissance" name="dateNaissance" placeholder="Date de naissance">
+                        <input type="text" class="form-control mb-2" id="numSecu" name="numSecu" placeholder="Numéro de Sécurité Sociale">
+                        <input type="text" class="form-control mb-2" id="adresse" name="adresse"  placeholder="Adresse">
+                        <input type="tel" class="form-control mb-2" id="telephone" name="telephone" placeholder="Téléphone">
+                        <input type="text" class="form-control mb-2"  id="mutuelle" name="mutuelle" placeholder="Mutuelle">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="button" class="btn btn-primary">Enregistrer</button>
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
                     </div>
                 </form>
             </div>
@@ -75,8 +75,8 @@
             <th>Nom</th>
             <th>Prénom</th>
             <th>Date de naissance</th>
-            <th>Numéro Sécurité Sociale</th>
-            <th>Téléphone</th>
+            <th>Numero Securite Sociale</th>
+            <th>Telephone</th>
             <th>Mutuelle</th>
             <th>Actions</th>
         </tr>
@@ -86,9 +86,7 @@
             List<Patient> patients = (List<Patient>) request.getAttribute("patients");
 
 
-//            if(!(patients.isEmpty())){
-//                System.out.println("eeeeeeeeeeeeeee");
-//            }
+
 
             if(patients !=null){
                 System.out.println("SIIIIIIIIIIIIIZE   "+patients.size());
@@ -102,8 +100,8 @@
             <td><%= patient.getTelephone() %></td>
             <td><%= patient.getMutuelle() %></td>
             <td class="table-actions">
-                <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#medicalModal<%= patient.getId() %>">📋 Recueil médical</button>
-                <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#vitalsModal<%= patient.getId() %>">💉 Signes vitaux</button>
+                <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#medicalModal<%= patient.getId() %>"> Recueil medical</button>
+                <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#vitalsModal<%= patient.getId() %>"> Signes vitaux</button>
             </td>
         </tr>
         <%

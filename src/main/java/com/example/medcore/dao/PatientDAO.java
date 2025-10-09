@@ -30,7 +30,6 @@ public class PatientDAO {
                     .getResultList();
             System.out.println("PatientDAO: fetched patients size = " + patientList.size());
         } finally {
-            System.out.println("akhnaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
             em.close();
         }
 
