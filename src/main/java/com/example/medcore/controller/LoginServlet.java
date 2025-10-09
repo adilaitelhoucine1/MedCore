@@ -50,7 +50,7 @@ public class LoginServlet  extends HttpServlet {
             session.setAttribute("user", user);
             switch (user.getRole()) {
                 case INFIRMIER:
-                    request.getRequestDispatcher("/Infirmier/INFIRMIER.jsp").forward(request, response);
+                    response.sendRedirect("listPatients");
                     break;
                 case GENERALISTE:
                     request.getRequestDispatcher("generaliste/GENERALISTE.jsp").forward(request, response);

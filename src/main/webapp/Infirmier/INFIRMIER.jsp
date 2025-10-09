@@ -1,15 +1,10 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%
-    com.example.medcore.model.Utilisateur user = (com.example.medcore.model.Utilisateur) session.getAttribute("user");
-    if (user == null || !"INFIRMIER".equals(user.getRole().toString())) {
-        response.sendRedirect("infirmier-login.jsp");
-        return;
-    }
-%>
+<%@ page import="com.example.medcore.model.Patient" %>
+<%@ page import="java.util.List" %>
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Accueil Infirmier</title>
+    <meta charset="UTF-8">
+    <title>Accueil Infirmier - Demo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -20,158 +15,251 @@
             margin: 30px 0 10px 0;
             color: #1677ff;
             font-weight: 700;
-            letter-spacing: 1px;
-            text-shadow: 0 2px 12px #a2c5f9;
         }
         .logout-btn {
             position: absolute;
             top: 18px;
             right: 28px;
         }
-        .card-custom {
-            border-radius: 18px;
-            box-shadow: 0 4px 18px #bdd8fa7a;
-            transition: box-shadow 0.2s;
-        }
-        .card-custom:hover {
-            box-shadow: 0 8px 30px #1677ff33;
-        }
-        .card-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #1677ff;
-            text-shadow: 0 1px 8px #e3f1ff;
-        }
-        .btn-primary, .btn-info, .btn-success, .btn-warning {
-            border-radius: 22px;
-            font-weight: 600;
-            padding: 8px 22px;
-            box-shadow: 0 2px 8px #bdd8fa44;
-            transition: background 0.15s;
-        }
-        .btn-primary:hover, .btn-info:hover, .btn-success:hover, .btn-warning:hover {
-            background: #1677ff !important;
-            color: #fff !important;
-        }
-        .form-control {
-            border-radius: 14px;
-        }
-        .dashboard-row {
-            margin-top: 45px;
-        }
-        @media (max-width: 970px) {
-            .dashboard-row {
-                flex-direction: column;
-                gap: 32px !important;
-            }
+
+        .table-actions .btn {
+            margin-right: 6px;
+            margin-bottom: 4px;
         }
     </style>
 </head>
 <body>
-<a href="logout" class="btn btn-outline-danger logout-btn">Déconnexion</a>
+<a href="#" class="btn btn-outline-danger logout-btn">Déconnexion</a>
 <div class="container">
-    <h2 class="dashboard-title text-center">Bienvenue, <%= user.getNom() %> (Infirmier)</h2>
-    <div class="row dashboard-row d-flex justify-content-center gap-3">
-        <!-- Accueil du patient -->
-        <div class="col-md-6">
-            <div class="card card-custom p-4">
-                <div class="card-title mb-3">Accueil du patient</div>
-                <form action="searchPatient" method="get" class="mb-3">
-                    <div class="input-group">
-                        <input type="text" class="form-control" name="searchQuery" placeholder="Nom ou ID du patient" required>
-                        <button class="btn btn-info" type="submit">🔍 Rechercher</button>
-                    </div>
-                </form>
-                <div class="d-flex flex-column gap-2 mb-2">
-                    <!-- Button triggers modal -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#patientModal">
-                        ➕ Créer un nouveau patient
-                    </button>
-                    <a href="enterVitalSigns.jsp" class="btn btn-success">💉 Saisir les signes vitaux</a>
-                </div>
-                <form action="addToQueue" method="post" class="mt-2">
-                    <div class="input-group">
-                        <input type="text" class="form-control" name="patientId" placeholder="ID du patient" required>
-                        <button class="btn btn-warning" type="submit">⏳ Ajouter à la file d’attente</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <!-- Liste des patients -->
-        <div class="col-md-5">
-            <div class="card card-custom p-4">
-                <div class="card-title mb-3">Liste des patients</div>
-                <a href="patientList.jsp" class="btn btn-primary mb-3">🗂️ Voir la liste des patients</a>
-                <form action="patientList.jsp" method="get" class="mb-2">
-                    <label for="filterDate" class="form-label">Filtrer par date d’enregistrement:</label>
-                    <div class="input-group">
-                        <input type="date" class="form-control" id="filterDate" name="registerDate">
-                        <button class="btn btn-info" type="submit">Filtrer</button>
-                    </div>
-                </form>
-                <form action="patientList.jsp" method="get">
-                    <label for="sortTime" class="form-label">Trier par heure d’arrivée:</label>
-                    <div class="input-group">
-                        <select class="form-select" id="sortTime" name="sortOrder">
-                            <option value="asc">↑ Croissant</option>
-                            <option value="desc">↓ Décroissant</option>
-                        </select>
-                        <button class="btn btn-success" type="submit">Trier</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+    <h2 class="dashboard-title text-center">Bienvenue, Adilaitelhoucine (Infirmier)</h2>
 
-<!-- Modal for creating patient -->
-<div class="modal fade" id="patientModal" tabindex="-1" aria-labelledby="patientModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="registerPatient" method="post">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="patientModalLabel">Informations du patient</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="nom" class="form-label">Nom</label>
-                        <input type="text" class="form-control" id="nom" name="nom" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="prenom" class="form-label">Prénom</label>
-                        <input type="text" class="form-control" id="prenom" name="prenom" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="dateNaissance" class="form-label">Date de naissance</label>
-                        <input type="date" class="form-control" id="dateNaissance" name="dateNaissance" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="numSecu" class="form-label">Numéro de Sécurité Sociale</label>
-                        <input type="text" class="form-control" id="numSecu" name="numSecu" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="adresse" class="form-label">Adresse</label>
-                        <input type="text" class="form-control" id="adresse" name="adresse" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="telephone" class="form-label">Téléphone</label>
-                        <input type="tel" class="form-control" id="telephone" name="telephone" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="mutuelle" class="form-label">Mutuelle</label>
-                        <input type="text" class="form-control" id="mutuelle" name="mutuelle">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-primary">Enregistrer</button>
-                </div>
-            </form>
+    <div class="row mb-4">
+        <div class="col-12">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#patientModal">
+                ➕ Créer un nouveau patient
+            </button>
         </div>
     </div>
+
+    <!-- Modal: Créer un nouveau patient -->
+    <div class="modal fade" id="patientModal" tabindex="-1" aria-labelledby="patientModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="patientModalLabel">Informations administratives</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="form-control mb-2" placeholder="Nom">
+                        <input type="text" class="form-control mb-2" placeholder="Prénom">
+                        <input type="date" class="form-control mb-2" placeholder="Date de naissance">
+                        <input type="text" class="form-control mb-2" placeholder="Numéro de Sécurité Sociale">
+                        <input type="text" class="form-control mb-2" placeholder="Adresse">
+                        <input type="tel" class="form-control mb-2" placeholder="Téléphone">
+                        <input type="text" class="form-control mb-2" placeholder="Mutuelle">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-primary">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mt-5 mb-3 text-primary">Liste des patients</h3>
+    <table class="table table-striped table-bordered align-middle">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Date de naissance</th>
+            <th>Numéro Sécurité Sociale</th>
+            <th>Téléphone</th>
+            <th>Mutuelle</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <%
+            List<Patient> patients = (List<Patient>) request.getAttribute("patients");
+
+
+//            if(!(patients.isEmpty())){
+//                System.out.println("eeeeeeeeeeeeeee");
+//            }
+
+            if(patients !=null){
+                System.out.println("SIIIIIIIIIIIIIZE   "+patients.size());
+                for (Patient patient : patients) {
+        %>
+        <tr>
+            <td><%= patient.getNom() %></td>
+            <td><%= patient.getPrenom() %></td>
+            <td><%= patient.getDateNaissance() %></td>
+            <td><%= patient.getNumSecu() %></td>
+            <td><%= patient.getTelephone() %></td>
+            <td><%= patient.getMutuelle() %></td>
+            <td class="table-actions">
+                <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#medicalModal<%= patient.getId() %>">📋 Recueil médical</button>
+                <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#vitalsModal<%= patient.getId() %>">💉 Signes vitaux</button>
+            </td>
+        </tr>
+        <%
+                }
+            }
+        %>
+
+        </tbody>
+    </table>
+
+    <!-- MODALS FOR EACH PATIENT -->
+    <!-- Medical Data Modal 1 -->
+    <div class="modal fade" id="medicalModal1" tabindex="-1" aria-labelledby="medicalModalLabel1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="medicalModalLabel1">Recueil médical: Dupont Marie</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        <textarea class="form-control mb-2" placeholder="Antécédents médicaux"></textarea>
+                        <textarea class="form-control mb-2" placeholder="Allergies"></textarea>
+                        <textarea class="form-control mb-2" placeholder="Traitements en cours"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-warning">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Vital Signs Modal 1 -->
+    <div class="modal fade" id="vitalsModal1" tabindex="-1" aria-labelledby="vitalsModalLabel1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="vitalsModalLabel1">Signes vitaux: Dupont Marie</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="form-control mb-2" placeholder="Tension artérielle">
+                        <input type="number" class="form-control mb-2" placeholder="Fréquence cardiaque">
+                        <input type="number" step="0.1" class="form-control mb-2" placeholder="Température corporelle">
+                        <input type="number" class="form-control mb-2" placeholder="Fréquence respiratoire">
+                        <input type="number" step="0.1" class="form-control mb-2" placeholder="Poids">
+                        <input type="number" step="0.01" class="form-control mb-2" placeholder="Taille">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-success">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Medical Data Modal 2 -->
+    <div class="modal fade" id="medicalModal2" tabindex="-1" aria-labelledby="medicalModalLabel2" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="medicalModalLabel2">Recueil médical: Durand Paul</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        <textarea class="form-control mb-2" placeholder="Antécédents médicaux"></textarea>
+                        <textarea class="form-control mb-2" placeholder="Allergies"></textarea>
+                        <textarea class="form-control mb-2" placeholder="Traitements en cours"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-warning">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Vital Signs Modal 2 -->
+    <div class="modal fade" id="vitalsModal2" tabindex="-1" aria-labelledby="vitalsModalLabel2" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="vitalsModalLabel2">Signes vitaux: Durand Paul</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="form-control mb-2" placeholder="Tension artérielle">
+                        <input type="number" class="form-control mb-2" placeholder="Fréquence cardiaque">
+                        <input type="number" step="0.1" class="form-control mb-2" placeholder="Température corporelle">
+                        <input type="number" class="form-control mb-2" placeholder="Fréquence respiratoire">
+                        <input type="number" step="0.1" class="form-control mb-2" placeholder="Poids">
+                        <input type="number" step="0.01" class="form-control mb-2" placeholder="Taille">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-success">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Medical Data Modal 3 -->
+    <div class="modal fade" id="medicalModal3" tabindex="-1" aria-labelledby="medicalModalLabel3" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="medicalModalLabel3">Recueil médical: Martin Sophie</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        <textarea class="form-control mb-2" placeholder="Antécédents médicaux"></textarea>
+                        <textarea class="form-control mb-2" placeholder="Allergies"></textarea>
+                        <textarea class="form-control mb-2" placeholder="Traitements en cours"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-warning">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Vital Signs Modal 3 -->
+    <div class="modal fade" id="vitalsModal3" tabindex="-1" aria-labelledby="vitalsModalLabel3" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="vitalsModalLabel3">Signes vitaux: Martin Sophie</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="form-control mb-2" placeholder="Tension artérielle">
+                        <input type="number" class="form-control mb-2" placeholder="Fréquence cardiaque">
+                        <input type="number" step="0.1" class="form-control mb-2" placeholder="Température corporelle">
+                        <input type="number" class="form-control mb-2" placeholder="Fréquence respiratoire">
+                        <input type="number" step="0.1" class="form-control mb-2" placeholder="Poids">
+                        <input type="number" step="0.01" class="form-control mb-2" placeholder="Taille">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-success">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </div>
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

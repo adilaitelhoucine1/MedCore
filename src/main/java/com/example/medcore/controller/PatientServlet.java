@@ -9,8 +9,9 @@ import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
-@WebServlet("/registerPatient")
+@WebServlet(urlPatterns = {"/registerPatient", "/listPatients"})
 public class PatientServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -35,7 +36,33 @@ public class PatientServlet extends HttpServlet {
         PatientDAO dao = new PatientDAO();
         dao.save(patient);
 
-        // Redirect or forward to confirmation or patient list
         response.sendRedirect("SPECIALISTE.jsp?success=1");
     }
+
+
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String path = request.getServletPath();
+
+        switch (path) {
+            case "/listPatients":
+                PatientDAO dao = new PatientDAO();
+
+                List<Patient> patients = dao.listPatients();
+                System.out.println("Servlet: fetched patients size = " + patients.size()); // debug
+                request.setAttribute("patients", patients);
+                request.getRequestDispatcher("Infirmier/INFIRMIER.jsp").forward(request, response);
+
+                break;
+
+            default:
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                break;
+        }
+    }
+
+
 }

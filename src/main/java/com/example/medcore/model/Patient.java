@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+
 public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
