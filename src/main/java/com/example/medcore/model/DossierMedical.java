@@ -1,6 +1,7 @@
 package com.example.medcore.model;
 
 import jakarta.persistence.*;
+
 import java.util.List;
 
 @Entity
@@ -24,6 +25,15 @@ public class DossierMedical {
 
     @OneToMany
     private List<ActeTechnique> actesTechniques;
+
+protected DossierMedical(){}
+
+    public DossierMedical(Patient patient, String antecedents, String allergies, String traitementEnCours) {
+        this.patient=patient;
+        this.antecedents=antecedents;
+        this.allergies=allergies;
+        this.traitementEnCours=traitementEnCours;
+    }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

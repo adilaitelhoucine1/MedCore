@@ -37,4 +37,17 @@ public class PatientDAO {
     }
 
 
+    public Patient findById(int id) {
+        EntityManager em = emf.createEntityManager();
+        Patient patient = null;
+        try {
+            patient = em.find(Patient.class, id);
+        } finally {
+            em.close();
+        }
+        return patient;
+    }
+
+
+
 }
