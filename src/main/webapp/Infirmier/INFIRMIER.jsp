@@ -84,7 +84,7 @@
         <tr>
             <th>Name</th>
             <th>First name</th>
-            <th>Birth date</th>
+            <th>Status</th>
             <th>Social Security Number</th>
             <th>Phone</th>
             <th>Insurance</th>
@@ -101,7 +101,7 @@
         <tr>
             <td><%= patient.getNom() %></td>
             <td><%= patient.getPrenom() %></td>
-            <td><%= patient.getDateNaissance() %></td>
+            <td><%= patient.getFileAttente() %></td>
             <td><%= patient.getNumSecu() %></td>
             <td><%= patient.getTelephone() %></td>
             <td><%= patient.getMutuelle() %></td>

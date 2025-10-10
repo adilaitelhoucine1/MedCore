@@ -17,19 +17,18 @@ public class Patient {
     private String adresse;
     private String telephone;
     private String mutuelle;
-    private Boolean fileAttente;
+    @Column(name = "file_attente", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean fileAttente = true;
 
-    // Unidirectional One-to-One to DossierMedical
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "dossier_medical_id")
     private DossierMedical dossierMedical;
 
-    // Unidirectional One-to-One to SignesVitaux
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "signes_vitaux_id")
     private SignesVitaux signesVitaux;
 
-    // Getters & Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
