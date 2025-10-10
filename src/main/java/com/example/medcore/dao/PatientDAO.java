@@ -36,6 +36,20 @@ public class PatientDAO {
         return patientList;
     }
 
+    public List<Patient> listActivePatients() {
+        EntityManager em = emf.createEntityManager();
+        List<Patient> patientList;
+
+        try {
+            patientList = em.createQuery("SELECT p FROM Patient p where p.fileAttente=true ", Patient.class)
+                    .getResultList();
+            System.out.println("PatientDAO: fetched patients size = " + patientList.size());
+        } finally {
+            em.close();
+        }
+
+        return patientList;
+    }
 
     public Patient findById(int id) {
         EntityManager em = emf.createEntityManager();

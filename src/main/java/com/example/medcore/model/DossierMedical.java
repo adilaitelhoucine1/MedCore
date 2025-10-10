@@ -13,7 +13,6 @@ public class DossierMedical {
     private String allergies;
     private String traitementEnCours;
 
-    // Many-to-One / One-to-One with Patient (optional unidirectional)
     @OneToOne
     @JoinColumn(name = "patient_id")
     private Patient patient;

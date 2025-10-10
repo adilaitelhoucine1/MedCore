@@ -51,9 +51,10 @@ public class LoginServlet  extends HttpServlet {
             switch (user.getRole()) {
                 case INFIRMIER:
                     response.sendRedirect("listPatients");
+
                     break;
                 case GENERALISTE:
-                    request.getRequestDispatcher("generaliste/GENERALISTE.jsp").forward(request, response);
+                    response.sendRedirect(request.getContextPath() +"/generaliste");
                     break;
                 case SPECIALISTE:
                     request.getRequestDispatcher("specialiste/SPECIALISTE.jsp").forward(request, response);

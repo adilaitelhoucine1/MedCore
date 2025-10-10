@@ -68,12 +68,12 @@ public class PatientServlet extends HttpServlet {
             case "/listPatients":
                 PatientDAO dao = new PatientDAO();
                 List<Patient> patients = dao.listPatients();
-
                 request.setAttribute("patients", patients);
-
                 request.getRequestDispatcher("/Infirmier/INFIRMIER.jsp").forward(request, response);
                 break;
-
+            case "/generaliste":
+                response.getWriter().println("-------------------iokiçkçkiçikiçiçkiçkçà;;okuijuijuijuçjuino,juiniuinuiuiuii");
+                break;
             default:
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 break;
