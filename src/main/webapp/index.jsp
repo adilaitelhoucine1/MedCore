@@ -53,11 +53,11 @@
     <a href="register" class="btn">Inscription</a>
 </div>
 <%-- Check if error attribute exists --%>
-<c:if test="${not empty error}">
-    <div style="color:red;">
-            ${error}
-    </div>
-</c:if>
+<%--<c:if test="${not empty error}">--%>
+<%--    <div style="color:red;">--%>
+<%--            ${error}--%>
+<%--    </div>--%>
+<%--</c:if>--%>
 
 
 <%-- Display the user object directly --%>

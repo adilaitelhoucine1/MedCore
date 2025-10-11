@@ -72,7 +72,7 @@ public class PatientServlet extends HttpServlet {
                 request.getRequestDispatcher("/Infirmier/INFIRMIER.jsp").forward(request, response);
                 break;
             case "/generaliste":
-                response.getWriter().println("-------------------iokiçkçkiçikiçiçkiçkçà;;okuijuijuijuçjuino,juiniuinuiuiuii");
+              //  response.getWriter().println("-------------------iokiçkçkiçikiçiçkiçkçà;;okuijuijuijuçjuino,juiniuinuiuiuii");
                 break;
             default:
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);

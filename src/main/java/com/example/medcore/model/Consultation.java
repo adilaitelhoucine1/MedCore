@@ -33,6 +33,17 @@ public class Consultation {
     public enum Status {
         EN_ATTENTE, TERMINEE, EN_ATTENTE_AVIS_SPECIALISTE
     }
+    protected  Consultation(){}
+    public  Consultation(Patient patient, MedecinGeneraliste medecinGeneraliste,String motif,String observations,String diagnostic,String traitement,Double cout){
+        this.patient=patient;
+        this.medecinGeneraliste=medecinGeneraliste;
+        this.dateConsultation=LocalDateTime.now();
+        this.motif=motif;
+        this.observations=observations;
+        this.diagnostic=diagnostic;
+        this.traitement=traitement;
+        this.cout=cout;
+    }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

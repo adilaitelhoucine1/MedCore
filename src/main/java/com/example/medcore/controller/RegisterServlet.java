@@ -55,6 +55,7 @@ public class RegisterServlet extends HttpServlet {
                 return;
         }
         try {
+            // two instance of User DAo()
             UserDAO userDAO = new UserDAO();
             UserSercive userSercive = new UserSercive(userDAO);
             boolean registered = userSercive.register(user);

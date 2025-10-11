@@ -20,7 +20,7 @@ public class UserSercive {
         }
 
         public  Utilisateur login(String email,String password){
-
+            // validate exsiting email
             Utilisateur user = userDAO.findByEmail(email);
             if (user != null) {
                 if (BCrypt.checkpw(password, user.getMotDePasse())) {
