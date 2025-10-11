@@ -3,6 +3,8 @@ package com.example.medcore.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Patient {
@@ -20,6 +22,9 @@ public class Patient {
     private String mutuelle;
     @Column(name = "file_attente", columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean fileAttente = true;
+
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Consultation> consultations = new ArrayList<>();
 
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -62,4 +67,12 @@ public class Patient {
 
     public SignesVitaux getSignesVitaux() { return signesVitaux; }
     public void setSignesVitaux(SignesVitaux signesVitaux) { this.signesVitaux = signesVitaux; }
+
+    public List<Consultation> getConsultations() {
+        return consultations;
+    }
+
+    public void setConsultations(List<Consultation> consultations) {
+        this.consultations = consultations;
+    }
 }

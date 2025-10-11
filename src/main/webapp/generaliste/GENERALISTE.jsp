@@ -1,5 +1,7 @@
 <%@ page import="com.example.medcore.model.Patient" %>
+<%@ page import="com.example.medcore.model.Consultation" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.example.medcore.model.DossierMedical" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -44,27 +46,27 @@
             <td><button class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#medicalFileModal<%= patient.getId() %>">Dossier</button></td>
         </tr>
         <%
-            } // end for
+            }
         } else {
         %>
         <tr>
-            <td colspan="8" class="text-center text-muted">Aucun patient trouve.</td>
+            <td colspan="8" class="text-center text-muted">Aucun patient trouvé.</td>
         </tr>
         <% } %>
         </tbody>
     </table>
 </div>
 
-<!-- ✅ All modals go outside the table -->
+<%-- Modals for each patient --%>
 <%
     if (patients != null && !patients.isEmpty()) {
         for (Patient patient : patients) {
 %>
 
-<!-- Modal Consultation -->
+<!-- Modal: Nouvelle Consultation -->
 <div class="modal fade" id="consultationModal<%= patient.getId() %>" tabindex="-1">
     <div class="modal-dialog">
-        <form action="<%= request.getContextPath() %>/addconsultation" class="modal-content bg-white shadow" method="post">
+        <form action="<%= request.getContextPath() %>/addconsultation" method="post" class="modal-content bg-white shadow">
             <input type="hidden" name="patient_id" value="<%= patient.getId() %>">
             <div class="modal-header">
                 <h5 class="modal-title">Nouvelle consultation</h5>
@@ -75,15 +77,12 @@
                 <input type="text" class="form-control mb-2" name="motif" required>
                 <label class="form-label">Observations</label>
                 <textarea class="form-control mb-2" name="observations" required></textarea>
-
                 <label class="form-label">Diagnostic</label>
                 <input type="text" class="form-control mb-2" name="diagnostic" required>
                 <label class="form-label">Traitement</label>
                 <textarea class="form-control mb-2" name="traitement" required></textarea>
-
-                <label class="form-label">cout</label>
+                <label class="form-label">Coût</label>
                 <input type="number" class="form-control mb-2" name="cout" required>
-
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-success">Enregistrer</button>
@@ -92,7 +91,52 @@
     </div>
 </div>
 
-<!-- Modal Acte Technique -->
+<!-- Modal: Détails des Consultations -->
+<div class="modal fade" id="consultDetailModal<%= patient.getId() %>" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-white shadow">
+            <div class="modal-header">
+                <h5 class="modal-title">Détails des consultations - <%= patient.getNom() %> <%= patient.getPrenom() %></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <%
+                    List<Consultation> consultations = patient.getConsultations();
+                    if (consultations != null && !consultations.isEmpty()) {
+                %>
+                <table class="table table-bordered align-middle">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Date</th>
+                        <th>Motif</th>
+                        <th>Observations</th>
+                        <th>Diagnostic</th>
+                        <th>Traitement</th>
+                        <th>Coût</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% for (Consultation c : consultations) { %>
+                    <tr>
+                        <td><%= c.getDateConsultation() != null ? c.getDateConsultation() : "-" %></td>
+                        <td><%= c.getMotif() %></td>
+                        <td><%= c.getObservations() %></td>
+                        <td><%= c.getDiagnostic() %></td>
+                        <td><%= c.getTraitement() %></td>
+                        <td><%= c.getCout() %> dh</td>
+                    </tr>
+                    <% } %>
+                    </tbody>
+                </table>
+                <% } else { %>
+                <p class="text-center text-muted">Aucune consultation enregistrée pour ce patient.</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Actes -->
 <div class="modal fade" id="actModal<%= patient.getId() %>" tabindex="-1">
     <div class="modal-dialog">
         <form class="modal-content bg-white shadow">
@@ -120,7 +164,7 @@
     </div>
 </div>
 
-<!-- Modal Prise en charge directe -->
+<!-- Modal: Prise en charge directe -->
 <div class="modal fade" id="directCareModal<%= patient.getId() %>" tabindex="-1">
     <div class="modal-dialog">
         <form class="modal-content bg-white shadow">
@@ -141,7 +185,7 @@
     </div>
 </div>
 
-<!-- Modal Tele-expertise -->
+<!-- Modal: Tele-expertise -->
 <div class="modal fade" id="expertiseModal<%= patient.getId() %>" tabindex="-1">
     <div class="modal-dialog">
         <form class="modal-content bg-white shadow">
@@ -172,50 +216,37 @@
     </div>
 </div>
 
-<!-- Modal Details Consultation -->
-<div class="modal fade" id="consultDetailModal<%= patient.getId() %>" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content bg-white shadow">
-            <div class="modal-header">
-                <h5 class="modal-title">Details consultation</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Motif:</strong> Toux</p>
-                <p><strong>Diagnostic:</strong> Grippe</p>
-                <p><strong>Actes:</strong> Radiographie, Analyse sang</p>
-                <p><strong>Cout total:</strong> 350 dh</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Dossier Medical -->
+<!-- Modal: Dossier Medical -->
 <div class="modal fade" id="medicalFileModal<%= patient.getId() %>" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content bg-white shadow">
             <div class="modal-header">
-                <h5 class="modal-title">Dossier medical</h5>
+                <h5 class="modal-title">Dossier médical</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p><strong>Antecedents:</strong> Asthme</p>
-                <p><strong>Allergies:</strong> Penicilline</p>
-                <p><strong>Traitements en cours:</strong> Inhalateur</p>
-                <ul>
-                    <li>2025-10-01: Grippe</li>
-                    <li>2025-09-15: Controle</li>
-                </ul>
+                <%
+                    DossierMedical dossierMedical = patient.getDossierMedical();
+                    if (dossierMedical != null) {
+                %>
+                <p><strong>Antécédents:</strong> <%= dossierMedical.getAntecedents() %></p>
+                <p><strong>Allergies:</strong> <%= dossierMedical.getAllergies() %></p>
+                <p><strong>Traitements en cours:</strong> <%= dossierMedical.getTraitementEnCours() %></p>
                 <p><strong>Actes techniques:</strong> Radiographie</p>
+                <%
+                } else {
+                %>
+                <p class="text-muted text-center">Aucun dossier médical disponible pour ce patient.</p>
+                <%
+                    }
+                %>
             </div>
         </div>
     </div>
 </div>
 
-<%
-        } // end for modals
-    }
-%>
+
+<% } } %>
 
 </body>
 </html>

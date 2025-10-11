@@ -5,9 +5,9 @@ import com.example.medcore.model.Consultation;
 
 public class GeneralistService {
     ConsultationDAO consultationDAO = new ConsultationDAO();
-    public void addConsultation(Consultation consultation){
+    public boolean addConsultation(Consultation consultation){
 
-        consultationDAO.save(consultation);
+        return consultationDAO.save(consultation);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.medcore.controller;
 
+import com.example.medcore.dao.ConsultationDAO;
 import com.example.medcore.dao.DossierDAO;
 import com.example.medcore.dao.PatientDAO;
 import com.example.medcore.model.Consultation;
@@ -7,6 +8,7 @@ import com.example.medcore.model.MedecinGeneraliste;
 import com.example.medcore.model.Patient;
 import com.example.medcore.model.Utilisateur;
 import com.example.medcore.service.GeneralistService;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,9 +17,26 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.List;
 
-@WebServlet("/addconsultation")
+@WebServlet({"/addconsultation"})
 public class ConsultationServelt extends HttpServlet {
+
+    private ConsultationDAO consultationDAO = new ConsultationDAO();
+
+
+//    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+//            throws ServletException, IOException {
+//
+//        int patientId = Integer.parseInt(req.getParameter("patientId"));
+//        List<Consultation> consultations = consultationDAO.findByPatientId(patientId);
+//
+//        req.setAttribute("consultations", consultations);
+//        RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/consultations_fragment.jsp");
+//        dispatcher.forward(req, resp);
+//    }
+
+
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -41,8 +60,10 @@ public class ConsultationServelt extends HttpServlet {
 
                 Consultation consultation= new Consultation(patient,generaliste,motif,observations,diagnostic,traitement,cout);
                 GeneralistService generalistService = new GeneralistService();
-                generalistService.addConsultation(consultation);
-
+                boolean added= generalistService.addConsultation(consultation);
+                if(added){
+                    resp.sendRedirect("generaliste");
+                }
 
                 break;
 

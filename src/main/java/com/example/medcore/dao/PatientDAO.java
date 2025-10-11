@@ -51,6 +51,24 @@ public class PatientDAO {
         return patientList;
     }
 
+
+    public List<Patient> findPatientswithInfo() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.createQuery(
+                            "SELECT DISTINCT p FROM Patient p " +
+                                    "LEFT JOIN FETCH p.consultations c " +
+                                    "LEFT JOIN FETCH p.dossierMedical dm",
+                            Patient.class)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+
+
+
     public Patient findById(int id) {
         EntityManager em = emf.createEntityManager();
         Patient patient = null;

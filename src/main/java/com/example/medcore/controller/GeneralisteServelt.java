@@ -17,21 +17,22 @@ public class GeneralisteServelt extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         String path = request.getServletPath();
+        switch (path){
 
-        switch (path) {
             case "/generaliste":
-                response.getWriter().println("aaaaaaaaaaaaaaaa");
-                PatientDAO dao = new PatientDAO();
-                List<Patient> patients = dao.listActivePatients();
-                request.setAttribute("patients", patients);
-                 request.getRequestDispatcher("/generaliste/GENERALISTE.jsp").forward(request, response);
-                break;
+                PatientDAO patientDAO = new PatientDAO();
+                List<Patient> patients = patientDAO.findPatientswithInfo();
 
+                request.setAttribute("patients", patients);
+
+                request.getRequestDispatcher("/generaliste/GENERALISTE.jsp").forward(request, response);
+                break;
             default:
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 break;
         }
+
+
     }
 }
