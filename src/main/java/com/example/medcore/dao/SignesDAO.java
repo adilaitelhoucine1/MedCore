@@ -1,5 +1,6 @@
 package com.example.medcore.dao;
 
+import com.example.medcore.model.Patient;
 import com.example.medcore.model.SignesVitaux;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -12,7 +13,12 @@ public class SignesDAO {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
+            Patient patient = signesVitaux.getpatient();
+            patient.setSignesVitaux(signesVitaux);
+
+
             em.persist(signesVitaux);
+            em.merge(patient);
             em.getTransaction().commit();
             return true;
 
