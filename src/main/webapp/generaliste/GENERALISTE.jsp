@@ -2,6 +2,7 @@
 <%@ page import="com.example.medcore.model.Consultation" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.medcore.model.DossierMedical" %>
+<%@ page import="com.example.medcore.model.SignesVitaux" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -227,12 +228,24 @@
             <div class="modal-body">
                 <%
                     DossierMedical dossierMedical = patient.getDossierMedical();
-                    if (dossierMedical != null) {
+                    SignesVitaux signesVitaux=patient.getSignesVitaux();
+                    if (dossierMedical != null ) {
                 %>
                 <p><strong>Antécédents:</strong> <%= dossierMedical.getAntecedents() %></p>
                 <p><strong>Allergies:</strong> <%= dossierMedical.getAllergies() %></p>
                 <p><strong>Traitements en cours:</strong> <%= dossierMedical.getTraitementEnCours() %></p>
                 <p><strong>Actes techniques:</strong> Radiographie</p>
+                <hr>
+                <h5 class="modal-title">Signes Vitaux </h5>
+                <hr>
+
+                <p><strong>tension:</strong> <%= signesVitaux.getTension()%></p>
+                <p><strong>frequenceCardiaque:</strong> <%= signesVitaux.getFrequenceCardiaque()%></p>
+                <p><strong>temperature:</strong> <%=  signesVitaux.getTemperature()%></p>
+<%--               <p><strong>frequenceRespiratoire techniques:</strong> <%=signesVitaux.getFrequenceRespiratoire()%> </p>--%>
+                <p><strong>poids :</strong> <%= signesVitaux.getPoids()%> </p>
+                <p><strong>taille :</strong><%= signesVitaux.getTaille()%> </p>
+
                 <%
                 } else {
                 %>

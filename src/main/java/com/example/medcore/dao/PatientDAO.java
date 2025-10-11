@@ -58,7 +58,8 @@ public class PatientDAO {
             return em.createQuery(
                             "SELECT DISTINCT p FROM Patient p " +
                                     "LEFT JOIN FETCH p.consultations c " +
-                                    "LEFT JOIN FETCH p.dossierMedical dm",
+                                    "LEFT JOIN FETCH p.dossierMedical dm"+
+                                    "LEFT JOIN FETCH p.signesVitaux",
                             Patient.class)
                     .getResultList();
         } finally {
