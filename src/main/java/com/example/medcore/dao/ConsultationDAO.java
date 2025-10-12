@@ -26,7 +26,7 @@ public class ConsultationDAO {
     }
 
 
-    public List<Consultation> findByPatientId(int patientId){
+    public List<Consultation> getConsultationbyPatient(long patientId){
         EntityManager em = JpaUtil.getEntityManager();
 
         try {
@@ -38,5 +38,16 @@ public class ConsultationDAO {
         } finally {
             em.close();
         }
+    }
+
+    public  Consultation findByID(Long consultationId){
+        EntityManager em = JpaUtil.getEntityManager();
+        Consultation consultation=null;
+        try {
+            consultation=em.find(Consultation.class,consultationId);
+        }finally {
+            em.close();
+        }
+        return consultation;
     }
 }

@@ -3,6 +3,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.medcore.model.DossierMedical" %>
 <%@ page import="com.example.medcore.model.SignesVitaux" %>
+<%@ page import="com.example.medcore.dao.ConsultationDAO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -26,7 +27,7 @@
             <th>Actes</th>
             <th>Prise directe</th>
             <th>Tele-expertise</th>
-            <th>Details</th>
+            <th>Details De Consultation</th>
             <th>Dossier</th>
         </tr>
         </thead>
@@ -43,7 +44,7 @@
             <td><button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#actModal<%= patient.getId() %>">Acte</button></td>
             <td><button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#directCareModal<%= patient.getId() %>">Directe</button></td>
             <td><button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#expertiseModal<%= patient.getId() %>">Tele</button></td>
-            <td><button class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#consultDetailModal<%= patient.getId() %>">Details</button></td>
+            <td><button class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#consultDetailModal<%= patient.getId() %>">Details </button></td>
             <td><button class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#medicalFileModal<%= patient.getId() %>">Dossier</button></td>
         </tr>
         <%
@@ -94,13 +95,17 @@
 
 <!-- Modal: Détails des Consultations -->
 <div class="modal fade" id="consultDetailModal<%= patient.getId() %>" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content bg-white shadow">
             <div class="modal-header">
-                <h5 class="modal-title">Détails des consultations - <%= patient.getNom() %> <%= patient.getPrenom() %></h5>
+                <h5 class="modal-title">
+                    Détails des consultations - <%= patient.getNom() %> <%= patient.getPrenom() %>
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
+
+            <!-- ✅ Scroll activé + limite de hauteur -->
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
                 <%
                     List<Consultation> consultations = patient.getConsultations();
                     if (consultations != null && !consultations.isEmpty()) {
@@ -114,6 +119,8 @@
                         <th>Diagnostic</th>
                         <th>Traitement</th>
                         <th>Coût</th>
+                        <th>Status</th>
+                        <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -125,6 +132,21 @@
                         <td><%= c.getDiagnostic() %></td>
                         <td><%= c.getTraitement() %></td>
                         <td><%= c.getCout() %> dh</td>
+                        <td><%= c.getStatus() %></td>
+                        <td>
+                            <form action="consultation" method="post" class="d-flex align-items-center">
+                                <input type="hidden" name="action" value="updateStatus">
+                                <input type="hidden" name="consultationId" value="<%= c.getId() %>">
+
+                                <select name="status" class="form-select form-select-sm me-2">
+                                    <option value="EN_COURS" <%= "EN_COURS".equals(c.getStatus()) ? "selected" : "" %>>En cours</option>
+                                    <option value="EN_ATTENTE_AVIS_SPECIALISTE" <%= "EN_ATTENTE_AVIS_SPECIALISTE".equals(c.getStatus()) ? "selected" : "" %>>En attente avis spécialiste</option>
+                                    <option value="TERMINEE" <%= "TERMINEE".equals(c.getStatus()) ? "selected" : "" %>>Terminée</option>
+                                </select>
+
+                                <button type="submit" class="btn btn-sm btn-primary">✔</button>
+                            </form>
+                        </td>
                     </tr>
                     <% } %>
                     </tbody>
@@ -137,33 +159,62 @@
     </div>
 </div>
 
+
 <!-- Modal: Actes -->
 <div class="modal fade" id="actModal<%= patient.getId() %>" tabindex="-1">
     <div class="modal-dialog">
-        <form class="modal-content bg-white shadow">
+        <form class="modal-content bg-white shadow" action="<%= request.getContextPath() %>/addactetechnique" method="post">
             <div class="modal-header">
                 <h5 class="modal-title">Ajouter acte technique</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <label class="form-label">Type d'acte</label>
-                <select class="form-select mb-2">
-                    <option>Radiographie</option>
-                    <option>Echographie</option>
-                    <option>IRM</option>
-                    <option>ECG</option>
-                    <option>Analyse sang</option>
-                    <option>Analyse urine</option>
+
+
+                <input type="hidden" name="patient_id" value="<%= patient.getId() %>">
+
+
+                <label class="form-label">Sélectionner une consultation</label>
+                <%
+                    com.example.medcore.dao.ConsultationDAO consultationDAO = new com.example.medcore.dao.ConsultationDAO();
+                    java.util.List<com.example.medcore.model.Consultation> consultationslist = consultationDAO.getConsultationbyPatient(patient.getId());
+                %>
+
+                <% if (consultationslist != null && !consultationslist.isEmpty()) { %>
+                <select class="form-select mb-3" name="consultation_id" required>
+                    <% for (com.example.medcore.model.Consultation consultation : consultationslist) { %>
+                    <option value="<%= consultation.getId() %>">
+                        <%= consultation.getMotif() != null ? consultation.getMotif() : "Consultation #" + consultation.getId() %>
+                    </option>
+                    <% } %>
                 </select>
-                <label class="form-label">Resultat</label>
-                <input type="text" class="form-control mb-2">
+                <% } else { %>
+                <p class="text-muted small">⚠️ Aucune consultation trouvée pour ce patient.</p>
+                <% } %>
+
+                <!-- Acte type -->
+                <label class="form-label">Type d'acte</label>
+                <select class="form-select mb-2" name="actetyppe">
+                    <option value="RADIOGRAPHIE">Radiographie</option>
+                    <option value="ECHOGRAPHIE">Echographie</option>
+                    <option value="IRM">IRM</option>
+                    <option value="ELECTROCARDIOGRAMME">ECG</option>
+                    <option value="ANALYSE_SANG">Analyse sang</option>
+                    <option value="ANALYSE_URINE">Analyse urine</option>
+                </select>
+
+                <!-- Résultat -->
+                <label class="form-label">Résultat</label>
+                <input type="text" class="form-control mb-2" name="result">
             </div>
+
             <div class="modal-footer">
                 <button type="submit" class="btn btn-info">Ajouter</button>
             </div>
         </form>
     </div>
 </div>
+
 
 <!-- Modal: Prise en charge directe -->
 <div class="modal fade" id="directCareModal<%= patient.getId() %>" tabindex="-1">

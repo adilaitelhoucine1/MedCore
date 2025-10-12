@@ -21,7 +21,7 @@ public class Consultation {
     private String observations;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status=Status.EN_ATTENTE;
 
     private String diagnostic;
     private String traitement;

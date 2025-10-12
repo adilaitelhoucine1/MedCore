@@ -1,6 +1,7 @@
 package com.example.medcore.dao;
 
 import com.example.medcore.model.Utilisateur;
+import com.example.medcore.util.JpaUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
@@ -9,10 +10,10 @@ import jakarta.persistence.Persistence;
 import static com.example.medcore.util.JpaUtil.getEntityManager;
 
 public class UserDAO {
-    private EntityManagerFactory em = Persistence.createEntityManagerFactory("default");
+//private EntityManagerFactory em = Persistence.createEntityManagerFactory("default");
 
     public boolean save(Utilisateur user) {
-        EntityManager entityManager = em.createEntityManager();
+        EntityManager entityManager = JpaUtil.getEntityManager();
         try {
             entityManager.getTransaction().begin();
             entityManager.persist(user);

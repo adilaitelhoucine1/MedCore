@@ -22,6 +22,13 @@ public class ActeTechnique {
         RADIOGRAPHIE, ECHOGRAPHIE, IRM, ELECTROCARDIOGRAMME, LASER_DERMATO, FOND_OEIL, ANALYSE_SANG, ANALYSE_URINE
     }
 
+    protected ActeTechnique(){}
+    public ActeTechnique(Consultation consultation , String resultat,TypeActe typeActe){
+        this.date=LocalDateTime.now();
+        this.consultation=consultation;
+        this.resultat=resultat;
+        this.typeActe=typeActe;
+    }
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public TypeActe getTypeActe() { return typeActe; }
