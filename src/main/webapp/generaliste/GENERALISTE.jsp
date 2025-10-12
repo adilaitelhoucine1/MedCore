@@ -126,7 +126,12 @@
                     <tbody>
                     <% for (Consultation c : consultations) { %>
                     <tr>
-                        <td><%= c.getDateConsultation() != null ? c.getDateConsultation() : "-" %></td>
+                        <td>
+                            <%= c.getDateConsultation() != null
+                                    ? c.getDateConsultation().format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                                    : "-"
+                            %>
+                        </td>
                         <td><%= c.getMotif() %></td>
                         <td><%= c.getObservations() %></td>
                         <td><%= c.getDiagnostic() %></td>
@@ -134,18 +139,31 @@
                         <td><%= c.getCout() %> dh</td>
                         <td><%= c.getStatus() %></td>
                         <td>
-                            <form action="consultation" method="post" class="d-flex align-items-center">
+                            <form action="<%=request.getContextPath()%>/changestatusconsultation" method="post" class="d-flex align-items-center">
                                 <input type="hidden" name="action" value="updateStatus">
                                 <input type="hidden" name="consultationId" value="<%= c.getId() %>">
 
                                 <select name="status" class="form-select form-select-sm me-2">
-                                    <option value="EN_COURS" <%= "EN_COURS".equals(c.getStatus()) ? "selected" : "" %>>En cours</option>
-                                    <option value="EN_ATTENTE_AVIS_SPECIALISTE" <%= "EN_ATTENTE_AVIS_SPECIALISTE".equals(c.getStatus()) ? "selected" : "" %>>En attente avis spécialiste</option>
-                                    <option value="TERMINEE" <%= "TERMINEE".equals(c.getStatus()) ? "selected" : "" %>>Terminée</option>
+                                    <option value="EN_ATTENTE"
+                                            <%= (c.getStatus() != null && c.getStatus().name().equals("EN_ATTENTE")) || c.getStatus() == null ? "selected" : "" %>>
+                                        En attente
+                                    </option>
+
+                                    <option value="EN_ATTENTE_AVIS_SPECIALISTE"
+                                            <%= c.getStatus() != null && c.getStatus().name().equals("EN_ATTENTE_AVIS_SPECIALISTE") ? "selected" : "" %>>
+                                        En attente avis spécialiste
+                                    </option>
+
+                                    <option value="TERMINEE"
+                                            <%= c.getStatus() != null && c.getStatus().name().equals("TERMINEE") ? "selected" : "" %>>
+                                        Terminée
+                                    </option>
                                 </select>
+
 
                                 <button type="submit" class="btn btn-sm btn-primary">✔</button>
                             </form>
+
                         </td>
                     </tr>
                     <% } %>

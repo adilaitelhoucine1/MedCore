@@ -16,4 +16,8 @@ public class GeneralistService {
     public  boolean saveActe(ActeTechnique acteTechnique){
        return acteDAO.save(acteTechnique);
     }
+    public  boolean updateStatus(Consultation consultation){
+
+       return consultationDAO.updateStatus(consultation);
+    }
 }
