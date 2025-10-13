@@ -25,8 +25,8 @@
             <th>Prenom</th>
             <th>Consultation</th>
             <th>Actes</th>
-            <th>Prise directe</th>
-            <th>Tele-expertise</th>
+<%--            <th>Prise directe</th>--%>
+            <th>Demande-expertise</th>
             <th>Details De Consultation</th>
             <th>Dossier</th>
         </tr>
@@ -42,7 +42,7 @@
             <td><%= patient.getPrenom() %></td>
             <td><button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#consultationModal<%= patient.getId() %>">Consultation</button></td>
             <td><button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#actModal<%= patient.getId() %>">Acte</button></td>
-            <td><button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#directCareModal<%= patient.getId() %>">Directe</button></td>
+<%--            <td><button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#directCareModal<%= patient.getId() %>">Directe</button></td>--%>
             <td><button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#expertiseModal<%= patient.getId() %>">Tele</button></td>
             <td><button class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#consultDetailModal<%= patient.getId() %>">Details </button></td>
             <td><button class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#medicalFileModal<%= patient.getId() %>">Dossier</button></td>
@@ -142,6 +142,7 @@
                             <form action="<%=request.getContextPath()%>/changestatusconsultation" method="post" class="d-flex align-items-center">
                                 <input type="hidden" name="action" value="updateStatus">
                                 <input type="hidden" name="consultationId" value="<%= c.getId() %>">
+                                <input type="hidden" name="patient_id" value="<%=c.getPatient().getId()%>">
 
                                 <select name="status" class="form-select form-select-sm me-2">
                                     <option value="EN_ATTENTE"
@@ -235,25 +236,25 @@
 
 
 <!-- Modal: Prise en charge directe -->
-<div class="modal fade" id="directCareModal<%= patient.getId() %>" tabindex="-1">
-    <div class="modal-dialog">
-        <form class="modal-content bg-white shadow">
-            <div class="modal-header">
-                <h5 class="modal-title">Prise en charge directe</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <label class="form-label">Diagnostic</label>
-                <input type="text" class="form-control mb-2">
-                <label class="form-label">Traitement</label>
-                <input type="text" class="form-control mb-2">
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-warning">Cloturer</button>
-            </div>
-        </form>
-    </div>
-</div>
+<%--<div class="modal fade" id="directCareModal<%= patient.getId() %>" tabindex="-1">--%>
+<%--    <div class="modal-dialog">--%>
+<%--        <form class="modal-content bg-white shadow">--%>
+<%--            <div class="modal-header">--%>
+<%--                <h5 class="modal-title">Prise en charge directe</h5>--%>
+<%--                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>--%>
+<%--            </div>--%>
+<%--            <div class="modal-body">--%>
+<%--                <label class="form-label">Diagnostic</label>--%>
+<%--                <input type="text" class="form-control mb-2">--%>
+<%--                <label class="form-label">Traitement</label>--%>
+<%--                <input type="text" class="form-control mb-2">--%>
+<%--            </div>--%>
+<%--            <div class="modal-footer">--%>
+<%--                <button type="submit" class="btn btn-warning">Cloturer</button>--%>
+<%--            </div>--%>
+<%--        </form>--%>
+<%--    </div>--%>
+<%--</div>--%>
 
 <!-- Modal: Tele-expertise -->
 <div class="modal fade" id="expertiseModal<%= patient.getId() %>" tabindex="-1">
@@ -329,6 +330,8 @@
 
 
 <% } } %>
+
+
 
 </body>
 </html>

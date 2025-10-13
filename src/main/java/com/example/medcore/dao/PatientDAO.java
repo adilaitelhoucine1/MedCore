@@ -1,15 +1,17 @@
 package com.example.medcore.dao;
 
+import com.example.medcore.model.Consultation;
 import com.example.medcore.model.Patient;
+import com.example.medcore.util.JpaUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PatientDAO {
     List<Patient> patientList ;
+    ConsultationDAO consultationDAO = new ConsultationDAO();
     private static final EntityManagerFactory emf =
             Persistence.createEntityManagerFactory("default");
 
@@ -81,6 +83,33 @@ public class PatientDAO {
         return patient;
     }
 
+    public void updateStatus(Patient patient) {
+        EntityManager em = JpaUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            List<Consultation> consultations = consultationDAO.getConsultationbyPatient(patient.getId());
+            boolean changed = false;
+            for (Consultation consultation : consultations) {
+                if (consultation.getStatus() != Consultation.Status.TERMINEE) {
+                    changed = true;
+                    break;
+                }
 
+            }
+            if (!changed) {
+                patient.setFileAttente(false);
+
+            } else {
+                patient.setFileAttente(true);
+            }
+
+            em.merge(patient);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+        } finally {
+            em.close();
+        }
+    }
 
 }

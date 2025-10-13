@@ -24,13 +24,13 @@ public class ConsultationServelt extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-
+        PatientDAO patientDAO = new PatientDAO();
         String servletPath = req.getServletPath();
 
         switch (servletPath) {
             case "/addconsultation":
                 int patientId=Integer.parseInt(req.getParameter("patient_id"));
-                PatientDAO patientDAO = new PatientDAO();
+
                 DossierDAO dossierDAO = new DossierDAO();
                 Patient patient = patientDAO.findById(patientId);
                 HttpSession session = req.getSession(false);
@@ -51,9 +51,13 @@ public class ConsultationServelt extends HttpServlet {
                 break;
             case "/changestatusconsultation":
                 long consultationId = Long.parseLong(req.getParameter("consultationId"));
-                String statusParam = req.getParameter("status"); // Get the value from the form
+                String statusParam = req.getParameter("status");
+                int patient_id= Integer.parseInt(req.getParameter("patient_id"));
 
-                Consultation newconsultation = consultationDAO.findByID(consultationId); // lowercase variable
+
+                Patient patient1 =patientDAO.findById(patient_id);
+                patientDAO.updateStatus(patient1);
+                Consultation newconsultation = consultationDAO.findByID(consultationId);
 
                 if (newconsultation != null && statusParam != null) {
                     try {
