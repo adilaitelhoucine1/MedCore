@@ -10,7 +10,7 @@ import jakarta.persistence.Persistence;
 import java.util.List;
 
 public class PatientDAO {
-    List<Patient> patientList ;
+    List<Patient> patientList;
     ConsultationDAO consultationDAO = new ConsultationDAO();
     private static final EntityManagerFactory emf =
             Persistence.createEntityManagerFactory("default");
@@ -60,7 +60,7 @@ public class PatientDAO {
             return em.createQuery(
                             "SELECT DISTINCT p FROM Patient p " +
                                     "LEFT JOIN FETCH p.consultations c " +
-                                    "LEFT JOIN FETCH p.dossierMedical dm"+
+                                    "LEFT JOIN FETCH p.dossierMedical dm" +
                                     "LEFT JOIN FETCH p.signesVitaux",
                             Patient.class)
                     .getResultList();
@@ -68,8 +68,6 @@ public class PatientDAO {
             em.close();
         }
     }
-
-
 
 
     public Patient findById(int id) {

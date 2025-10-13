@@ -1,5 +1,6 @@
 package com.example.medcore.dao;
 
+import com.example.medcore.model.Patient;
 import com.example.medcore.model.Utilisateur;
 import com.example.medcore.util.JpaUtil;
 import jakarta.persistence.EntityManager;
@@ -45,5 +46,18 @@ public class UserDAO {
             em.close();
         }
     }
+
+
+    public Utilisateur findById(int id) {
+        EntityManager em = JpaUtil.getEntityManager();
+        Utilisateur user = null;
+        try {
+            user = em.find(Utilisateur.class, id);
+        } finally {
+            em.close();
+        }
+        return user;
+    }
+
 
 }

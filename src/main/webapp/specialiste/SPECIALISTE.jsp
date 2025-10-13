@@ -101,25 +101,35 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form>
+                <form action="<%= request.getContextPath() %>/updateSpecialiteProfiile" method="post">
                     <div class="mb-3">
+                        <input type="hidden" name="user_id" value="<%=user.getId()%>">
                         <label class="form-label">Nom</label>
-                        <input type="text" class="form-control" value="Dr. John Smith">
+                        <input type="text" name="name" class="form-control" value="adil">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Specialite</label>
-                        <input type="text" class="form-control" value="Cardiologue">
+                        <select name="specialite" class="form-control">
+                            <option value="CARDIOLOGIE">CARDIOLOGIE</option>
+                            <option value="PNEUMOLOGIE">PNEUMOLOGIE</option>
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Tarif (MAD)</label>
-                        <input type="number" class="form-control" value="300">
+                        <input type="number" name="tarif" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">DureeConsultation (min)</label>
+                        <input type="number" name="dureeConsultation" class="form-control"
+                               value="<%= user.getDureeConsultation() != null ? user.getDureeConsultation() : 0 %>">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Sauvegarder</button>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-primary">Sauvegarder</button>
-            </div>
+
         </div>
     </div>
 </div>
