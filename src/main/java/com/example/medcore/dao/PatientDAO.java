@@ -20,6 +20,7 @@ public class PatientDAO {
         em.getTransaction().begin();
         em.persist(patient);
         em.getTransaction().commit();
+
         em.close();
     }
 
@@ -30,7 +31,7 @@ public class PatientDAO {
         try {
             patientList = em.createQuery("SELECT p FROM Patient p", Patient.class)
                     .getResultList();
-            System.out.println("PatientDAO: fetched patients size = " + patientList.size());
+            //System.out.println("PatientDAO: fetched patients size = " + patientList.size());
         } finally {
             em.close();
         }

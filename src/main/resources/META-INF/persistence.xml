@@ -17,6 +17,7 @@
         <class>com.example.medcore.model.ActeTechnique</class>
         <class>com.example.medcore.model.DemandeExpertise</class>
         <class>com.example.medcore.model.DossierMedical</class>
+        <class>com.example.medcore.model.DisponibiliteMedecin</class>
         <!-- Add more <class> entries if you add more entities -->
 
         <properties>

@@ -1,6 +1,9 @@
 <%@ page import="com.example.medcore.model.Utilisateur" %>
 <%@ page import="com.example.medcore.model.MedecinGeneraliste" %>
 <%@ page import="com.example.medcore.model.MedecinSpecialiste" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.example.medcore.model.Creneau" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -29,33 +32,63 @@
 
     <!-- Section Disponibilites -->
     <div class="card mb-4">
-        <div class="card-header bg-success text-white">Creneaux disponibles (3 prochains jours)</div>
+        <div class="card-header bg-success text-white">Creneaux disponibles </div>
         <div class="card-body">
             <table class="table table-bordered text-center align-middle">
                 <thead>
                 <tr>
-                    <th>Date</th>
+<%--                    <th>Date</th>--%>
                     <th>Heure</th>
                     <th>Statut</th>
-                    <th>Action</th>
+<%--                    <th>Action</th>--%>
                 </tr>
                 </thead>
                 <tbody>
+                <%
+                    List<Creneau> creneaus = (List<Creneau>) request.getAttribute("creneaus");
+                    if (creneaus != null && !creneaus.isEmpty()) {
+                        for (Creneau c : creneaus) {
+                            String badgeClass = "";
+                            String label = "";
+
+                            switch (c.getStatus()) {
+                                case DISPONIBLE:
+                                    badgeClass = "bg-success";
+                                    label = "Disponible";
+                                    break;
+                                case RESERVE:
+                                    badgeClass = "bg-warning text-dark";
+                                    label = "Réservé";
+                                    break;
+                                case ARCHIVE:
+                                    badgeClass = "bg-secondary";
+                                    label = "Archivé";
+                                    break;
+                            }
+                            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+                %>
                 <tr>
-                    <td>2025-10-14</td>
-                    <td>09:00 - 09:30</td>
-                    <td><span class="badge bg-success">Disponible</span></td>
-                    <td><button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editSlotModal">Modifier</button></td>
+<%--                    <td><%= c.getDate() %></td>--%>
+                    <td><%= c.getDateHeureDebut().format(timeFormatter) %> - <%= c.getDateHeureFin().format(timeFormatter) %></td>
+                    <td><span class="badge <%= badgeClass %>"><%= label %></span></td>
+                    <%-- <td><button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editSlotModal">Modifier</button></td> --%>
                 </tr>
+                <%
+                    }
+                } else {
+                %>
                 <tr>
-                    <td>2025-10-14</td>
-                    <td>09:30 - 10:00</td>
-                    <td><span class="badge bg-danger">Indisponible</span></td>
-                    <td><button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editSlotModal">Modifier</button></td>
+                    <td colspan="3" class="text-center text-muted">Aucun créneau disponible</td>
                 </tr>
+                <%
+                    }
+                %>
                 </tbody>
+
+
             </table>
-            <button class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#addSlotModal">Ajouter un creneau</button>
+
         </div>
     </div>
 
@@ -130,76 +163,6 @@
                 </form>
             </div>
 
-        </div>
-    </div>
-</div>
-
-<!-- Modal Modifier Creneau -->
-<div class="modal fade" id="editSlotModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Modifier le creneau</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label class="form-label">Date</label>
-                        <input type="date" class="form-control" value="2025-10-14">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Heure</label>
-                        <input type="text" class="form-control" value="09:00 - 09:30">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Statut</label>
-                        <select class="form-select">
-                            <option selected>Disponible</option>
-                            <option>Indisponible</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-warning">Mettre a jour</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Ajouter Creneau -->
-<div class="modal fade" id="addSlotModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Ajouter un creneau</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label class="form-label">Date</label>
-                        <input type="date" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Heure</label>
-                        <input type="text" class="form-control" placeholder="Ex: 10:00 - 10:30">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Statut</label>
-                        <select class="form-select">
-                            <option>Disponible</option>
-                            <option>Indisponible</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-success">Ajouter</button>
-            </div>
         </div>
     </div>
 </div>

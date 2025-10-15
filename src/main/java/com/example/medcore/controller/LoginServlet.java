@@ -57,7 +57,8 @@ public class LoginServlet  extends HttpServlet {
                     response.sendRedirect(request.getContextPath() +"/generaliste");
                     break;
                 case SPECIALISTE:
-                    request.getRequestDispatcher("specialiste/SPECIALISTE.jsp").forward(request, response);
+                    response.sendRedirect("specilaiste");
+
                     break;
                 default:
                     response.getWriter().println("Unknown role");

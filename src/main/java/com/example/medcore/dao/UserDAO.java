@@ -1,12 +1,13 @@
 package com.example.medcore.dao;
 
-import com.example.medcore.model.Patient;
-import com.example.medcore.model.Utilisateur;
+import com.example.medcore.model.*;
 import com.example.medcore.util.JpaUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.Persistence;
+
+import java.util.List;
 
 import static com.example.medcore.util.JpaUtil.getEntityManager;
 
@@ -18,6 +19,20 @@ public class UserDAO {
         try {
             entityManager.getTransaction().begin();
             entityManager.persist(user);
+            if(user.getRole().equals(Utilisateur.Role.SPECIALISTE)){
+                MedecinSpecialiste medecinSpecialiste=(MedecinSpecialiste)user;
+                List<Creneau> creneaux = entityManager.createQuery("SELECT c FROM Creneau c", Creneau.class)
+                        .getResultList();
+
+                for (Creneau c : creneaux) {
+                    DisponibiliteMedecin dispo = new DisponibiliteMedecin();
+                    dispo.setMedecinSpecialiste(medecinSpecialiste);
+                    dispo.setCreneau(c);
+                    dispo.setConsultation(null);
+                    dispo.setStatus(DisponibiliteMedecin.Status.DISPONIBLE);
+                    entityManager.persist(dispo);
+                }
+            }
             entityManager.getTransaction().commit();
             return true;
         } catch (Exception e) {

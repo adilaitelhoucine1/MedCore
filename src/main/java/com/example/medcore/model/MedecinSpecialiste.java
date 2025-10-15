@@ -1,10 +1,12 @@
 package com.example.medcore.model;
 
+import com.example.medcore.listener.MedecinSpecialisteListener;
 import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
 @DiscriminatorValue("SPECIALISTE")
+//@EntityListeners(MedecinSpecialisteListener.class)
 
 public class MedecinSpecialiste extends Utilisateur {
     @Enumerated(EnumType.STRING)
@@ -20,8 +22,9 @@ public class MedecinSpecialiste extends Utilisateur {
         this.dureeConsultation=dureeConsultation;
     }
 
-    @OneToMany(mappedBy = "medecinSpecialiste")
-    private List<Creneau> creneauxDisponibles;
+    @OneToMany(mappedBy = "medecinSpecialiste", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DisponibiliteMedecin> disponibilites;
+
 
     public enum Specialite {
         CARDIOLOGIE, PNEUMOLOGIE
@@ -33,6 +36,9 @@ public class MedecinSpecialiste extends Utilisateur {
     public void setTarif(Double tarif) { this.tarif = tarif; }
     public Integer getDureeConsultation() { return dureeConsultation; }
     public void setDureeConsultation(Integer dureeConsultation) { this.dureeConsultation = dureeConsultation; }
-    public List<Creneau> getCreneauxDisponibles() { return creneauxDisponibles; }
-    public void setCreneauxDisponibles(List<Creneau> creneauxDisponibles) { this.creneauxDisponibles = creneauxDisponibles; }
+  //  public List<Creneau> getCreneauxDisponibles() { return creneauxDisponibles; }
+   // public void setCreneauxDisponibles(List<Creneau> creneauxDisponibles) { this.creneauxDisponibles = creneauxDisponibles; }
+
+    public List<DisponibiliteMedecin> getDisponibilites() { return disponibilites; }
+    public void setDisponibilites(List<DisponibiliteMedecin> disponibilites) { this.disponibilites = disponibilites; }
 }
