@@ -21,6 +21,7 @@ public class UserDAO {
             entityManager.persist(user);
             if(user.getRole().equals(Utilisateur.Role.SPECIALISTE)){
                 MedecinSpecialiste medecinSpecialiste=(MedecinSpecialiste)user;
+                // apres 7awl t7t kola haj f blastha------------NB
                 List<Creneau> creneaux = entityManager.createQuery("SELECT c FROM Creneau c", Creneau.class)
                         .getResultList();
 

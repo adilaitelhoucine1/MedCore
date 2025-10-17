@@ -27,6 +27,7 @@ public class DemandeExpertise {
     private String avisMedecin;
     private String recommandations;
 
+
     public enum Priorite {
         URGENTE, NORMALE, NON_URGENTE
     }
@@ -34,6 +35,17 @@ public class DemandeExpertise {
     public enum Status {
         EN_ATTENTE, TERMINEE
     }
+
+    protected DemandeExpertise(){}
+    public DemandeExpertise(Consultation consultation , MedecinSpecialiste medecinSpecialiste,String question,Priorite priorite){
+            this.dateDemande=LocalDateTime.now();
+            this.status=Status.EN_ATTENTE;
+            this.consultation=consultation;
+            this.medecinSpecialiste=medecinSpecialiste;
+            this.question=question;
+            this.priorite=priorite;
+    }
+
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

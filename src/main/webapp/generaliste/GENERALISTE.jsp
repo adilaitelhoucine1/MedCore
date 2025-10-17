@@ -1,9 +1,6 @@
-<%@ page import="com.example.medcore.model.Patient" %>
-<%@ page import="com.example.medcore.model.Consultation" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.medcore.model.DossierMedical" %>
-<%@ page import="com.example.medcore.model.SignesVitaux" %>
 <%@ page import="com.example.medcore.dao.ConsultationDAO" %>
+<%@ page import="com.example.medcore.model.*" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -43,7 +40,7 @@
             <td><button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#consultationModal<%= patient.getId() %>">Consultation</button></td>
             <td><button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#actModal<%= patient.getId() %>">Acte</button></td>
 <%--            <td><button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#directCareModal<%= patient.getId() %>">Directe</button></td>--%>
-            <td><button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#expertiseModal<%= patient.getId() %>">Tele</button></td>
+            <td><button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#expertiseModal<%= patient.getId() %>">Demande</button></td>
             <td><button class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#consultDetailModal<%= patient.getId() %>">Details </button></td>
             <td><button class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#medicalFileModal<%= patient.getId() %>">Dossier</button></td>
         </tr>
@@ -235,57 +232,86 @@
 </div>
 
 
-<!-- Modal: Prise en charge directe -->
-<%--<div class="modal fade" id="directCareModal<%= patient.getId() %>" tabindex="-1">--%>
-<%--    <div class="modal-dialog">--%>
-<%--        <form class="modal-content bg-white shadow">--%>
-<%--            <div class="modal-header">--%>
-<%--                <h5 class="modal-title">Prise en charge directe</h5>--%>
-<%--                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>--%>
-<%--            </div>--%>
-<%--            <div class="modal-body">--%>
-<%--                <label class="form-label">Diagnostic</label>--%>
-<%--                <input type="text" class="form-control mb-2">--%>
-<%--                <label class="form-label">Traitement</label>--%>
-<%--                <input type="text" class="form-control mb-2">--%>
-<%--            </div>--%>
-<%--            <div class="modal-footer">--%>
-<%--                <button type="submit" class="btn btn-warning">Cloturer</button>--%>
-<%--            </div>--%>
-<%--        </form>--%>
-<%--    </div>--%>
-<%--</div>--%>
+
 
 <!-- Modal: Tele-expertise -->
 <div class="modal fade" id="expertiseModal<%= patient.getId() %>" tabindex="-1">
     <div class="modal-dialog">
-        <form class="modal-content bg-white shadow">
+        <form class="modal-content bg-white shadow" method="get" action="<%=request.getContextPath()%>/creneau">
+
             <div class="modal-header">
-                <h5 class="modal-title">Demande tele-expertise</h5>
+                <h5 class="modal-title">Demande expertise</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
+
             <div class="modal-body">
-                <label class="form-label">Specialite</label>
-                <select class="form-select mb-2">
-                    <option>Cardiologie</option>
-                    <option>Pneumologie</option>
-                    <option>Dermatologie</option>
+                <!-- Consultations disponibles -->
+                <label class="form-label" for="consultation<%= patient.getId() %>">Consultations disponibles</label>
+                <select class="form-select mb-3" id="consultation<%= patient.getId() %>" name="consultationId" required>
+                    <option value="">-- Sélectionnez une consultation --</option>
+                    <%
+                        List<Consultation> AvConsultations = consultationDAO.getAvailableConsultations(patient.getId());
+                        if (AvConsultations != null && !AvConsultations.isEmpty()) {
+                            for (Consultation consultation : AvConsultations) {
+                    %>
+                    <option value="<%= consultation.getId() %>">
+                        <%= consultation.getMotif() %> - <%= consultation.getDateConsultation() %>
+                    </option>
+                    <%
+                        }
+                    } else {
+                    %>
+                    <option disabled>Aucune consultation disponible</option>
+                    <%
+                        }
+                    %>
                 </select>
-                <label class="form-label">Question</label>
-                <textarea class="form-control mb-2"></textarea>
-                <label class="form-label">Priorite</label>
-                <select class="form-select">
-                    <option>Urgente</option>
-                    <option>Normale</option>
-                    <option>Non urgente</option>
+
+
+                <label class="form-label" for="medecin<%= patient.getId() %>">Médecin disponible</label>
+                <select class="form-select mb-3" id="medecin<%= patient.getId() %>" name="medecinId" required>
+                    <option value="">-- Sélectionnez un médecin --</option>
+                    <%
+                        List<MedecinSpecialiste> specialisteList = (List<MedecinSpecialiste>) request.getAttribute("specialisteList");
+                        if (specialisteList != null && !specialisteList.isEmpty()) {
+                            for (MedecinSpecialiste medecinSpecialiste : specialisteList) {
+                    %>
+                    <option value="<%= medecinSpecialiste.getId() %>">
+                        <%= medecinSpecialiste.getNom() %> -- <%= medecinSpecialiste.getSpecialite() %>
+                    </option>
+                    <%
+                        }
+                    } else {
+                    %>
+                    <option disabled>Aucun Specialiste disponible</option>
+                    <%
+                        }
+                    %>
                 </select>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-danger">Envoyer</button>
+
+                <!-- Button to go to next page to select créneau -->
+                <button type="submit" class="btn btn-primary w-100">Choisir créneau</button>
+
+                <!-- Question (optional on next page if needed) -->
+<%--                <label class="form-label mt-3" for="question<%= patient.getId() %>">Question</label>--%>
+<%--                <textarea class="form-control mb-3" id="question<%= patient.getId() %>" name="question" rows="3"></textarea>--%>
+
+                <!-- Priorité (optional on next page if needed) -->
+<%--                <label class="form-label" for="priorite<%= patient.getId() %>">Priorité</label>--%>
+<%--                <select class="form-select" id="priorite<%= patient.getId() %>" name="priorite">--%>
+<%--                    <option value="">-- Sélectionnez --</option>--%>
+<%--                    <option value="URGENTE">Urgente</option>--%>
+<%--                    <option value="NORMALE">Normale</option>--%>
+<%--                    <option value="NON_URGENTE">Non urgente</option>--%>
+<%--                </select>--%>
             </div>
         </form>
     </div>
 </div>
+
+
+
+
 
 <!-- Modal: Dossier Medical -->
 <div class="modal fade" id="medicalFileModal<%= patient.getId() %>" tabindex="-1">
@@ -331,6 +357,52 @@
 
 <% } } %>
 
+<%--<script>--%>
+<%--    document.getElementById('specialite').addEventListener('change', function() {--%>
+<%--        const specialite = this.value;--%>
+<%--        const medecinSelect = document.getElementById('medecin');--%>
+<%--        const creneauSelect = document.getElementById('creneau');--%>
+
+<%--        // Clear previous options--%>
+<%--        medecinSelect.innerHTML = '<option value="">-- Sélectionnez --</option>';--%>
+<%--        creneauSelect.innerHTML = '<option value="">-- Sélectionnez --</option>';--%>
+
+<%--        if (!specialite) return;--%>
+
+<%--        // Fetch available doctors for selected specialty--%>
+<%--        fetch(`/api/medecinsDisponibles?specialite=${specialite}`)--%>
+<%--            .then(response => response.json())--%>
+<%--            .then(data => {--%>
+<%--                data.forEach(doc => {--%>
+<%--                    const option = document.createElement('option');--%>
+<%--                    option.value = doc.id;--%>
+<%--                    option.textContent = doc.nom + ' ' + doc.prenom;--%>
+<%--                    medecinSelect.appendChild(option);--%>
+<%--                });--%>
+<%--            });--%>
+<%--    });--%>
+
+<%--    document.getElementById('medecin').addEventListener('change', function() {--%>
+<%--        const medecinId = this.value;--%>
+<%--        const creneauSelect = document.getElementById('creneau');--%>
+
+<%--        creneauSelect.innerHTML = '<option value="">-- Sélectionnez --</option>';--%>
+
+<%--        if (!medecinId) return;--%>
+
+<%--        // Fetch available creneaux for selected doctor--%>
+<%--        fetch(`/api/creneauxDisponibles?medecinId=${medecinId}`)--%>
+<%--            .then(response => response.json())--%>
+<%--            .then(data => {--%>
+<%--                data.forEach(slot => {--%>
+<%--                    const option = document.createElement('option');--%>
+<%--                    option.value = slot.id;--%>
+<%--                    option.textContent = slot.dateHeureDebut + ' - ' + slot.dateHeureFin;--%>
+<%--                    creneauSelect.appendChild(option);--%>
+<%--                });--%>
+<%--            });--%>
+<%--    });--%>
+<%--</script>--%>
 
 
 </body>

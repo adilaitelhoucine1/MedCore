@@ -1,13 +1,16 @@
 package com.example.medcore.service;
 
-import com.example.medcore.dao.ActeDAO;
-import com.example.medcore.dao.ConsultationDAO;
-import com.example.medcore.model.ActeTechnique;
-import com.example.medcore.model.Consultation;
+import com.example.medcore.dao.*;
+import com.example.medcore.model.*;
+
+import java.util.List;
 
 public class GeneralistService {
     ConsultationDAO consultationDAO = new ConsultationDAO();
     ActeDAO acteDAO=new ActeDAO();
+    SpecialisteDAO specialisteDAO=new SpecialisteDAO();
+    DemandeExpertiseDAO demandeExpertiseDAO=new DemandeExpertiseDAO();
+    CreneauDAO creneauDAO = new CreneauDAO();
     public boolean addConsultation(Consultation consultation){
 
         return consultationDAO.save(consultation);
@@ -19,5 +22,27 @@ public class GeneralistService {
     public  boolean updateStatus(Consultation consultation){
 
        return consultationDAO.updateStatus(consultation);
+    }
+    public List<Consultation> getAvailableConsultations(long patientId) {
+        return consultationDAO.getAvailableConsultations(patientId);
+    }
+
+
+    public List<MedecinSpecialiste> getAllSpecialiste(){
+
+
+        return specialisteDAO.getAllSpecialiste();
+    }
+
+
+    public  List<Creneau> getCreneau(int specialistId){
+        return specialisteDAO.getCreneau(specialistId);
+    }
+
+    public boolean saveDemande(DemandeExpertise demandeExpertise){return demandeExpertiseDAO.save(demandeExpertise);}
+
+    public boolean updateStatusCreaneau(Creneau creneau ,MedecinSpecialiste medecinSpecialiste,Consultation consultation){
+        creneau.setStatus(Creneau.Status.RESERVE);
+      return   creneauDAO.updateStatus(creneau,medecinSpecialiste,consultation);
     }
 }

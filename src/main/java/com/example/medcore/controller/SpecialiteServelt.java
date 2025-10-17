@@ -31,6 +31,7 @@ public class SpecialiteServelt extends HttpServlet{
 
                 break;
 
+
             default:
                 response.getWriter().println("errrrrrrrrrrrrorr");
                 break;
