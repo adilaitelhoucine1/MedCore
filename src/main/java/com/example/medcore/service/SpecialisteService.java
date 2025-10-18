@@ -6,6 +6,7 @@ import com.example.medcore.model.Creneau;
 import com.example.medcore.model.MedecinSpecialiste;
 
 import java.util.List;
+import java.util.Objects;
 
 public class SpecialisteService {
 
@@ -20,8 +21,11 @@ public class SpecialisteService {
 
     }
 
-    public List<Creneau> getCreneaux(){
-        return creneauDAO.getCreneaux();
+    public List<Creneau> getCreneaux(Long specialist_id){
+        return creneauDAO.getCreneaux(specialist_id);
+    }
+    public List<Object[]> getAllCreneau(Long specialist_id){
+        return creneauDAO.getAllCreneau(specialist_id);
     }
 
 

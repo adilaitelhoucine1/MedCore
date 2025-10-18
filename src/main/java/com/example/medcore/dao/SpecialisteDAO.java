@@ -61,7 +61,6 @@ public class SpecialisteDAO {
         return medecinSpecialistes;
     }
 
-//todo :testtsts
     public List<Creneau> getCreneau(int specialistId) {
         em = JpaUtil.getEntityManager();
         List<Creneau> creneausDispo = new ArrayList<>();
@@ -86,5 +85,29 @@ public class SpecialisteDAO {
         }
         return creneausDispo;
     }
+
+    public List<Object[]> getAllCreneau(Long specialistId) {
+        EntityManager em = JpaUtil.getEntityManager();
+        List<Object[]> results = new ArrayList<>();
+        try {
+            results = em.createQuery(
+                            "SELECT d.status, c.dateHeureDebut, c.dateHeureFin, c.id " +
+                                    "FROM DisponibiliteMedecin d " +
+                                    "JOIN d.creneau c " +
+                                    "WHERE d.medecinSpecialiste.id = :specialistId " +
+                                    "ORDER BY c.dateHeureDebut",Object[].class)
+                    .setParameter("specialistId", specialistId)
+                    .getResultList();
+        } catch (Exception e) {
+            if(em.getTransaction().isActive()){
+                e.printStackTrace();
+            }
+
+        } finally {
+            em.close();
+        }
+        return results;
+    }
+
 
 }

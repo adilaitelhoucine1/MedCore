@@ -1,9 +1,7 @@
-<%@ page import="com.example.medcore.model.Utilisateur" %>
-<%@ page import="com.example.medcore.model.MedecinGeneraliste" %>
-<%@ page import="com.example.medcore.model.MedecinSpecialiste" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.medcore.model.Creneau" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.time.LocalDateTime" %>
+<%@ page import="com.example.medcore.model.*" %>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -45,34 +43,38 @@
                 </thead>
                 <tbody>
                 <%
-                    List<Creneau> creneaus = (List<Creneau>) request.getAttribute("creneaus");
+                    List<Object[]> creneaus = (List<Object[]>) request.getAttribute("creneaus");
+
                     if (creneaus != null && !creneaus.isEmpty()) {
-                        for (Creneau c : creneaus) {
+                        for (Object[] row : creneaus) {
+                            DisponibiliteMedecin.Status status = ( DisponibiliteMedecin.Status) row[0];
+                            String statusString = status.name();
+                            LocalDateTime dateDebut = (LocalDateTime) row[1];
+                            LocalDateTime dateFin = (LocalDateTime) row[2];
+
                             String badgeClass = "";
                             String label = "";
 
-                            switch (c.getStatus()) {
-                                case DISPONIBLE:
+                            switch (statusString) {
+                                case "DISPONIBLE":
                                     badgeClass = "bg-success";
                                     label = "Disponible";
                                     break;
-                                case RESERVE:
+                                case "RESERVE":
                                     badgeClass = "bg-warning text-dark";
-                                    label = "Réservé";
+                                    label = "Reserve";
                                     break;
-                                case ARCHIVE:
+                                case "ARCHIVE":
                                     badgeClass = "bg-secondary";
-                                    label = "Archivé";
+                                    label = "Archive";
                                     break;
                             }
-                            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
+                            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
                 %>
                 <tr>
-<%--                    <td><%= c.getDate() %></td>--%>
-                    <td><%= c.getDateHeureDebut().format(timeFormatter) %> - <%= c.getDateHeureFin().format(timeFormatter) %></td>
+                    <td><%= dateDebut.format(timeFormatter) %> - <%= dateFin.format(timeFormatter) %></td>
                     <td><span class="badge <%= badgeClass %>"><%= label %></span></td>
-                    <%-- <td><button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editSlotModal">Modifier</button></td> --%>
                 </tr>
                 <%
                     }
@@ -84,6 +86,7 @@
                 <%
                     }
                 %>
+
                 </tbody>
 
 

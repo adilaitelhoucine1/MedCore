@@ -17,7 +17,7 @@ import java.util.List;
 
 @WebServlet({"/generaliste", "/creneau", "/confirmerDemande"})
 public class GeneralisteServelt extends HttpServlet {
-    GeneralistService generalistService = new GeneralistService();
+    GeneralistService   generalistService = new GeneralistService();
     PatientDAO patientDAO = new PatientDAO();
     ConsultationDAO consultationDAO = new ConsultationDAO();
     UserDAO userDAO = new UserDAO();
@@ -37,9 +37,13 @@ public class GeneralisteServelt extends HttpServlet {
                 request.getRequestDispatcher("/generaliste/GENERALISTE.jsp").forward(request, response);
                 break;
             case "/creneau":
-                int specialistId = Integer.parseInt(request.getParameter("medecinId"));
-                List<Creneau> creneaux = generalistService.getCreneau(specialistId);
-                //todo. handle the creneau based on status
+               Long specialistId = Long.parseLong(request.getParameter("medecinId"));
+                List<Object[]> creneaux = generalistService.getCreneau(specialistId);
+             //   System.out.println("sizzze"+ creneaux.size());
+              //  response.getWriter().println(specialistId);
+               // response.getWriter().println(request.getParameter("consultationId"));
+
+
                 request.setAttribute("creneaux", creneaux);
                 request.getRequestDispatcher("/generaliste/Creneau.jsp").forward(request, response);
                 break;

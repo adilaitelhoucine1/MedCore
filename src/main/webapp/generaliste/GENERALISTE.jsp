@@ -276,7 +276,7 @@
                         if (specialisteList != null && !specialisteList.isEmpty()) {
                             for (MedecinSpecialiste medecinSpecialiste : specialisteList) {
                     %>
-                    <option value="<%= medecinSpecialiste.getId() %>">
+                    <option value="<%=medecinSpecialiste.getId()%>">
                         <%= medecinSpecialiste.getNom() %> -- <%= medecinSpecialiste.getSpecialite() %>
                     </option>
                     <%

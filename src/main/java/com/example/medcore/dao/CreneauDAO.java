@@ -7,23 +7,37 @@ import com.example.medcore.model.MedecinSpecialiste;
 import com.example.medcore.util.JpaUtil;
 import jakarta.persistence.EntityManager;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CreneauDAO {
    // EntityManager em ;
-    public List<Creneau> getCreneaux(){
-        EntityManager   em = JpaUtil.getEntityManager();
-        List<Creneau> creneaus = List.of();
-        try {
-            creneaus = em.createQuery("select  c from Creneau  c",Creneau.class).getResultList();
 
-        }catch (Exception e ){
-            em.getTransaction().rollback();
-        }finally {
-            em.close();
-        }
-        return creneaus;
-    }
+   public List<Creneau> getCreneaux(Long medecinId) {
+       EntityManager em = JpaUtil.getEntityManager();
+       List<Creneau> creneaux = new ArrayList<>();
+
+       try {
+           creneaux = em.createQuery(
+                           "SELECT d.status, c.dateHeureDebut, c.dateHeureFin " +
+                                   "FROM DisponibiliteMedecin d " +
+                                   "JOIN d.creneau c " +
+                                   "WHERE d.medecinSpecialiste.id = :medecinId",
+                           Creneau.class
+                   )
+                   .setParameter("medecinId", medecinId)
+                   .getResultList();
+
+       } catch (Exception e) {
+           e.printStackTrace();
+       } finally {
+           em.close();
+       }
+
+       return creneaux;
+   }
+
 
     public  Creneau findById(int creneauId){
         EntityManager em = JpaUtil.getEntityManager();
@@ -64,4 +78,29 @@ public class CreneauDAO {
         }
 
     }
+
+    public List<Object[]> getAllCreneau(Long medecinId) {
+        EntityManager em = JpaUtil.getEntityManager();
+        List<Object[]> results = new ArrayList<>();
+        try {
+            results = em.createQuery(
+                            "SELECT d.status, c.dateHeureDebut, c.dateHeureFin " +
+                                    "FROM DisponibiliteMedecin d " +
+                                    "JOIN d.creneau c " +
+                                    "WHERE d.medecinSpecialiste.id = :medecinId",
+                            Object[].class  )
+                    .setParameter("medecinId", medecinId)
+                    .getResultList();
+
+            for (Object[] row : results) {
+                System.out.println(row[0] + " | " + row[1] + " | " + row[2]);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+        return results;
+    }
+
 }

@@ -35,8 +35,8 @@ public class GeneralistService {
     }
 
 
-    public  List<Creneau> getCreneau(int specialistId){
-        return specialisteDAO.getCreneau(specialistId);
+    public  List<Object[]> getCreneau(Long specialistId){
+        return specialisteDAO.getAllCreneau(specialistId);
     }
 
     public boolean saveDemande(DemandeExpertise demandeExpertise){return demandeExpertiseDAO.save(demandeExpertise);}

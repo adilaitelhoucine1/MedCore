@@ -3,11 +3,8 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.example.medcore.service.SpecialisteService" %>
 <%@ page import="com.example.medcore.dao.UserDAO" %>
-<%@ page import="com.example.medcore.model.Utilisateur" %>
-<%@ page import="com.example.medcore.model.MedecinSpecialiste" %>
-<%@ page import="com.example.medcore.model.Consultation" %>
 <%@ page import="com.example.medcore.dao.ConsultationDAO" %>
-<%@ page import="com.example.medcore.model.Creneau" %>
+<%@ page import="com.example.medcore.model.*" %>
 
 <%
     SpecialisteService specialisteService = new SpecialisteService();
@@ -25,8 +22,9 @@
     String consultationMotif = consultation.getMotif();
     String consultationDate = consultation.getDateConsultation().toString();
 
+    List<Object[]> creneaux = (List<Object[]>) request.getAttribute("creneaux");
+    response.getWriter().println("creneaux  size"+creneaux.size());
 
-    List<Creneau> creneaux = (List<Creneau>) request.getAttribute("creneaux");
 %>
 
 <!DOCTYPE html>
@@ -74,32 +72,34 @@
     <input type="hidden" name="medecinId" value="<%=medecinNid%>">
 
     <div class="calendar">
-
         <%
-            if (!creneaux.isEmpty()) {
 
 
-                for (Creneau c : creneaux) {
-                    String statusClass = c.getStatus().equals(Creneau.Status.DISPONIBLE) ? "available" : "reserved";
+            if (creneaux != null && !creneaux.isEmpty()) {
+                for (Object[] c : creneaux) {
+                    DisponibiliteMedecin.Status status = (DisponibiliteMedecin.Status) c[0];
+                    LocalDateTime dateDebut = (LocalDateTime) c[1];
+                    LocalDateTime dateFin = (LocalDateTime) c[2];
+                    Long creneauId = (Long) c[3];
+
+                    String statusClass = status.equals(DisponibiliteMedecin.Status.DISPONIBLE) ? "available" : "reserved";
         %>
-        <div class="creneau-card"<%= statusClass%>>
-            <% if (c.getStatus().equals(Creneau.Status.DISPONIBLE)) { %>
-            <input type="radio" name="creneauId" value="<%= c.getId() %>" required>
+        <div class="creneau-card <%= statusClass %>">
+            <% if (status.equals(DisponibiliteMedecin.Status.DISPONIBLE)) { %>
+            <input type="radio" name="creneauId" value="<%= creneauId %>" required>
             <% } %>
-            <p><strong><%= c.getDateHeureDebut()%> - <%= c.getDateHeureFin() %>
-            </strong></p>
-            <p>Status: <%= c.getStatus() %>
-            </p>
+            <p><strong><%= dateDebut %> - <%= dateFin %></strong></p>
+            <p>Status: <%= status %></p>
         </div>
-        <% }
-        } else {
-
-        %>
-        <p>Nooooooooooooooooooooooothing</p>
         <%
             }
-
+        } else {
         %>
+        <p>No creneaux available</p>
+        <%
+            }
+        %>
+
     </div>
 
 
