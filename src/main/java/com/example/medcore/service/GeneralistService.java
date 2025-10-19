@@ -45,4 +45,10 @@ public class GeneralistService {
         creneau.setStatus(Creneau.Status.RESERVE);
       return   creneauDAO.updateStatus(creneau,medecinSpecialiste,consultation);
     }
+
+    public  boolean updateCoutConsutation(Consultation consultation,Double tarif){
+        consultation.setCout(consultation.getCout()+tarif);
+        consultation.setStatus(Consultation.Status.TERMINEE);
+        return consultationDAO.updateCoutConsutation(consultation);
+    }
 }

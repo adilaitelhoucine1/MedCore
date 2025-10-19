@@ -89,7 +89,22 @@ public class ConsultationDAO {
         return consultations;
     }
 
-
+    public  boolean updateCoutConsutation(Consultation consultation){
+        EntityManager em  =JpaUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.merge(consultation);
+            em.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()){
+                em.getTransaction().rollback();
+            }
+            return false;
+        }finally {
+            em.close();
+        }
+    }
 
 
 }
