@@ -3,6 +3,7 @@
 <%@ page import="java.time.LocalDateTime" %>
 <%@ page import="com.example.medcore.model.*" %>
 
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>

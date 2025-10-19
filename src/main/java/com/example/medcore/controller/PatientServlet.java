@@ -1,7 +1,10 @@
 package com.example.medcore.controller;
 
 import com.example.medcore.dao.PatientDAO;
+import com.example.medcore.model.Infirmier;
+import com.example.medcore.model.MedecinGeneraliste;
 import com.example.medcore.model.Patient;
+import com.example.medcore.util.AuthUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -63,7 +66,15 @@ public class PatientServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String path = request.getServletPath();
+        if (!AuthUtil.isLoggedIn(request)) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
 
+        if (!AuthUtil.hasRole(request, Infirmier.class)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Accès interdit !");
+            return;
+        }
         switch (path) {
             case "/listPatients":
                 PatientDAO dao = new PatientDAO();

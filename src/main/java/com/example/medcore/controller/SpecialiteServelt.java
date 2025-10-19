@@ -5,6 +5,7 @@ import com.example.medcore.model.Creneau;
 import com.example.medcore.model.MedecinSpecialiste;
 import com.example.medcore.model.Utilisateur;
 import com.example.medcore.service.SpecialisteService;
+import com.example.medcore.util.AuthUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -23,6 +24,15 @@ public class SpecialiteServelt extends HttpServlet{
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException , ServletException {
         String path = request.getServletPath();
+        if (!AuthUtil.isLoggedIn(request)) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+
+        if (!AuthUtil.hasRole(request, MedecinSpecialiste.class)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Accès interdit !");
+            return;
+        }
         switch (path){
             case "/specilaiste":
 

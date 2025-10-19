@@ -6,6 +6,7 @@ import com.example.medcore.dao.PatientDAO;
 import com.example.medcore.dao.UserDAO;
 import com.example.medcore.model.*;
 import com.example.medcore.service.GeneralistService;
+import com.example.medcore.util.AuthUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -26,6 +27,15 @@ public class GeneralisteServelt extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String path = request.getServletPath();
+        if (!AuthUtil.isLoggedIn(request)) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+
+        if (!AuthUtil.hasRole(request, MedecinGeneraliste.class)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Accès interdit !");
+            return;
+        }
         switch (path){
             case "/generaliste":
 
