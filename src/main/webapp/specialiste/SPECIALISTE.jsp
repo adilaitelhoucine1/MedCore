@@ -124,6 +124,7 @@
                             LocalDateTime dateDemande = (LocalDateTime) d[3];
                             String patient_name = (String) d[4];
                             String patient_prenom = (String) d[5];
+                            Long consutation_id = (Long) d[6];
 
                             String badgeperiorite = "";
                             switch (priorite.name()) {
@@ -145,6 +146,23 @@
                     <td><%= dateDemande %></td>
                     <td><span class="badge bg-warning text-dark"><%= status.name() %></span></td>
                     <td>
+                        <%
+                            if(status.name().equals("TERMINEE")){
+
+
+                        %>
+                        <button
+                                type="button"
+                                class="btn btn-sm text-white  px-3 shadow-sm"
+                                style="background: linear-gradient(90deg, #007b0f, #00b448); border: none;"
+                                data-bs-toggle="modal"
+                                data-bs-target="#Actemodal<%= consutation_id %>">
+                            <i class="bi bi-plus-circle me-1"></i> Ajouter Acte
+                        </button>
+
+                        <%
+                            }
+                        %>
                         <!-- Button to open modal -->
                         <button
                                 type="button"
@@ -194,6 +212,55 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Modal for adding Acte -->
+                <div class="modal fade" id="Actemodal<%= consutation_id %>" tabindex="-1" aria-labelledby="respondModalLabel<%= id %>" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content shadow-lg rounded-4">
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title" id="respondModalLabel<%= id %>">
+                                    Ajouter un acte technique  Demande #<%= id %>
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <form action="<%=request.getContextPath()%>/addactetechnique" method="post">
+                                <input type="hidden" name="consutation_id" value="<%=consutation_id%>">
+                                <div class="modal-body">
+                                    <!-- You will pass the demande or consultation ID -->
+                                    <input type="hidden" name="demande_id" value="<%= id %>">
+
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">Type d acte</label>
+                                        <select name="actetyppe" class="form-select" required>
+                                            <option value="">Selectionner un acte</option>
+                                            <option value="RADIOGRAPHIE">Radiographie</option>
+                                            <option value="ECHOGRAPHIE">echographie</option>
+                                            <option value="IRM">IRM</option>
+                                            <option value="ELECTROCARDIOGRAMME">electrocardiogramme</option>
+                                            <option value="LASER_DERMATO">Laser dermatologique</option>
+                                            <option value="FOND_OEIL">Fond d œil</option>
+                                            <option value="ANALYSE_SANG">Analyse de sang</option>
+                                            <option value="ANALYSE_URINE">Analyse d urine</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">Resultat</label>
+                                        <textarea name="result" class="form-control" rows="3" placeholder="Saisir le resultat..." required></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    <button type="submit" class="btn btn-success">Ajouter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
 
 
                 <%

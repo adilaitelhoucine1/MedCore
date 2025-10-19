@@ -24,7 +24,7 @@ public class ActeTechniqueServelt extends HttpServlet {
                 ActeTechnique.TypeActe typeActe = ActeTechnique.TypeActe.valueOf(type.toUpperCase());
 
                 String result=request.getParameter("result");
-                Long consultation_id= Long.parseLong( request.getParameter("consultation_id"));
+                Long consultation_id= Long.parseLong( request.getParameter("consutation_id"));
                 ConsultationDAO consultationDAO= new ConsultationDAO();
                 Consultation consultation =consultationDAO.findByID(consultation_id);
 
@@ -32,7 +32,7 @@ public class ActeTechniqueServelt extends HttpServlet {
                 GeneralistService generalistService= new GeneralistService();
                boolean added= generalistService.saveActe(acteTechnique);
                if (added){
-                   response.sendRedirect("generaliste");
+                   response.sendRedirect("specilaiste");
                }
 
                 break;

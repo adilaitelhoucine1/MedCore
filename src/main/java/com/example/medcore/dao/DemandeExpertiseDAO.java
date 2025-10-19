@@ -31,7 +31,7 @@ public class DemandeExpertiseDAO {
         try {
             em.getTransaction().begin();
             demandes = em.createQuery(
-                    "SELECT d.id, d.priorite,d.status,d.dateDemande, p.nom, p.prenom " +
+                    "SELECT d.id, d.priorite,d.status,d.dateDemande, p.nom,p.prenom ,d.consultation.id " +
                             "FROM DemandeExpertise d " +
                             "JOIN d.consultation c " +
                             "JOIN c.patient p where d.medecinSpecialiste.id =:id",
