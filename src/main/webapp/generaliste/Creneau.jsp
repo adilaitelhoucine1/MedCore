@@ -23,7 +23,7 @@
     String consultationDate = consultation.getDateConsultation().toString();
 
     List<Object[]> creneaux = (List<Object[]>) request.getAttribute("creneaux");
-    response.getWriter().println("creneaux  size"+creneaux.size());
+  //  response.getWriter().println("creneaux  size"+creneaux.size());
 
 %>
 
