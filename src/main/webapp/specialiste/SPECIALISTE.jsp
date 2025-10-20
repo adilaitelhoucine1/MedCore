@@ -11,9 +11,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tableau de bord Specialiste</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #e9f5ff 0%, #f6f7fb 100%);
+            min-height: 100vh;
+        }
+        .dashboard-title {
+            margin: 30px 0 10px 0;
+            color: #1677ff;
+            font-weight: 700;
+        }
+        .logout-btn {
+            position: absolute;
+            top: 18px;
+            right: 28px;
+        }
+        .table-actions .btn {
+            margin-right: 6px;
+            margin-bottom: 4px;
+        }
+    </style>
 </head>
 
 <body class="bg-light">
+
+<a href="<%= request.getContextPath()%>/logout" class="btn btn-outline-danger logout-btn">Deconnexion</a>
+
 <div class="container mt-4">
     <h2 class="mb-4">Tableau de bord du Specialiste</h2>
 

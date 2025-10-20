@@ -28,7 +28,7 @@
     </style>
 </head>
 <body>
-<a href="#" class="btn btn-outline-danger logout-btn">Deconnexion</a>
+<a href="<%= request.getContextPath()%>/logout" class="btn btn-outline-danger logout-btn">Deconnexion</a>
 
 
 <%
